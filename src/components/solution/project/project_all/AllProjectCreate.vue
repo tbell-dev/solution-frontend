@@ -12,7 +12,7 @@
                 <input
                   type="text"
                   placeholder="프로젝트 이름을 입력해주세요."
-                  v-model="projectName"
+                  @input="projectName = $event.target.value"
                 />
                 <div class="warning" v-show="isprojectNameValid">
                   <img
@@ -32,7 +32,7 @@
                 <input
                   type="text"
                   placeholder="프로젝트 설명을 입력해주세요."
-                  v-model="projectExplain"
+                  @input="projectExplain = $event.target.value"
                 />
                 <div class="warning" v-show="isprojectExplainValid">
                   <img
@@ -240,7 +240,7 @@
                   name="collect-date"
                   id="collect-date-week"
                   v-model="collectCrawlingPeriod"
-                  value="1week"
+                  value="1"
                 />
                 <label for="collect-date-week">1주일</label>
               </div>
@@ -252,7 +252,7 @@
                   name="collect-date"
                   id="collect-date-month"
                   v-model="collectCrawlingPeriod"
-                  value="3month"
+                  value="2"
                 />
                 <label for="collect-date-month">3개월</label>
               </div>
@@ -264,7 +264,7 @@
                   name="collect-date"
                   id="collect-date-year"
                   v-model="collectCrawlingPeriod"
-                  value="1year"
+                  value="3"
                 />
                 <label for="collect-date-year">1년</label>
               </div>
@@ -276,13 +276,13 @@
                   name="collect-date"
                   id="collect-date-set"
                   v-model="collectCrawlingPeriod"
-                  value="custom"
+                  value="0"
                 />
                 <label for="collect-date-set">직접입력</label>
                 <Datepicker
                   class="datepicker"
                   v-model="collectCrawlingPeriodInput"
-                  v-show="collectCrawlingPeriod == 'custom'"
+                  v-show="collectCrawlingPeriod === '0'"
                   range
                   multiCalendars
                   :enableTimePicker="false"
@@ -299,7 +299,7 @@
                   name="collect-case"
                   id="collect-case-100"
                   v-model="collectCrawlingCount"
-                  value="count100"
+                  value="100"
                 />
                 <label for="collect-case-100">100</label>
               </div>
@@ -311,7 +311,7 @@
                   name="collect-case"
                   id="collect-case-500"
                   v-model="collectCrawlingCount"
-                  value="count500"
+                  value="500"
                 />
                 <label for="collect-case-500">500</label>
               </div>
@@ -323,7 +323,7 @@
                   name="collect-case"
                   id="collect-case-1000"
                   v-model="collectCrawlingCount"
-                  value="count1000"
+                  value="1000"
                 />
                 <label for="collect-case-1000">1000</label>
               </div>
@@ -335,7 +335,7 @@
                   name="collect-case"
                   id="collect-case-2000"
                   v-model="collectCrawlingCount"
-                  value="count2000"
+                  value="2000"
                 />
                 <label for="collect-case-2000">2000</label>
               </div>
@@ -347,206 +347,21 @@
                   name="collect-case"
                   id="collect-case-3000"
                   v-model="collectCrawlingCount"
-                  value="count3000"
+                  value="3000"
                 />
                 <label for="collect-case-3000">3000</label>
               </div>
             </li>
             <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-case"
-                  id="collect-case-set"
-                  v-model="collectCrawlingCount"
-                  value="countcustom"
-                />
-                <label for="collect-case-set">직접 입력</label>
-                <input
-                  type="text"
-                  v-show="collectCrawlingCount == 'countcustom'"
-                  v-model="collectCrawlingCountInput"
-                />
-              </div>
-            </li>
-          </ul>
-        </article>
-      </section>
-      <!-- 데이터 정제/전처리 -->
-      <section v-show="projectType === 'cleaning'">
-        <article>
-          <ul class="current-bar1">
-            <li>
-              <h2>프로젝트 설정<span class="star">*</span></h2>
-            </li>
-          </ul>
-        </article>
-        <article class="common1">
-          <h3>데이터 유형 <span class="star">*</span></h3>
-          <ul class="align1">
-            <li>
-              <button
-                @click="cleaningOnOff"
-                :class="{
-                  'btn1-active btn1-3': isCleaningOn,
-                  'btn1-3': !isCleaningOn,
-                }"
+              <label for="collect-case-set" class="margin-r10"
+                >직접 입력:</label
               >
-                영상/이미지 정제
-              </button>
-              <button
-                @click="preprocessingOnOff"
-                :class="{
-                  'btn1-active btn1-3': isPreprocessingOn,
-                  'btn1-3': !isPreprocessingOn,
-                }"
-              >
-                이미지 전처리
-              </button>
-            </li>
-          </ul>
-        </article>
-        <article class="purification-data-type" v-show="isCleaningOn">
-          <ul class="align1">
-            <li class="radio-wrap">
               <input
-                type="radio"
-                name="purification-type"
-                id="purification-type1"
-                v-model="CleaningFunction"
-                value="CleaningFunctionFrame"
+                type="text"
+                name="collect-case"
+                id="collect-case-set"
+                v-model="collectCrawlingCount"
               />
-              <label for="purification-type1"
-                >영상 프레임 단위 이미지 추출</label
-              >
-            </li>
-            <li class="radio-wrap">
-              <input
-                type="radio"
-                name="purification-type"
-                id="purification-type2"
-                v-model="CleaningFunction"
-                value="CleaningFunctionRemove"
-              />
-              <label for="purification-type2">중복 이미지 데이터 제거</label>
-            </li>
-          </ul>
-        </article>
-        <article class="image-preprocessing" v-show="isPreprocessingOn">
-          <ul class="align1">
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type1"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction1"
-              />
-              <label for="image-preprocessing-type1">그레이스케일</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type2"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction2"
-              />
-              <label for="image-preprocessing-type2">이진화</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type3"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction3"
-              />
-              <label for="image-preprocessing-type3">확대/축소</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type4"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction4"
-              />
-              <label for="image-preprocessing-type4">회전/변환</label>
-            </li>
-          </ul>
-          <ul class="align1">
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type5"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction5"
-              />
-              <label for="image-preprocessing-type5">밝기/대비</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type6"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction6"
-              />
-              <label for="image-preprocessing-type6">선명도</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type7"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction7"
-              />
-              <label for="image-preprocessing-type7">자르기</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type8"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction8"
-              />
-              <label for="image-preprocessing-type8">블러처리</label>
-            </li>
-          </ul>
-          <ul class="align1">
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type9"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction9"
-              />
-              <label for="image-preprocessing-type9">노이즈 제거</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type10"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction10"
-              />
-              <label for="image-preprocessing-type10">배경제거</label>
-            </li>
-            <li class="checkbox-wrap">
-              <input
-                type="checkbox"
-                name="image-preprocessing-type"
-                id="image-preprocessing-type11"
-                v-model="PreprocessingFunction"
-                value="PreprocessingFunction11"
-              />
-              <label for="image-preprocessing-type11">비식별화</label>
             </li>
           </ul>
         </article>
@@ -623,12 +438,30 @@
             :key="index"
             v-show="this.isClassSelectOn[index]"
           >
-            <div class="class-setting-title2 align1">
-              <div class="class-setting-title2-select align2">
-                <h3>공통속성</h3>
-              </div>
-              <div class="align2">
+            <ul class="project-class-setting">
+              <li class="class-setting-title">
                 <h3>클래스 별 속성</h3>
+              </li>
+              <li
+                class="align1 class-setting-contents"
+                v-for="item in categoryItems[index].categoryAttrItems"
+                :key="item"
+              >
+                <b>{{ item.categoryAttrName }}</b>
+              </li>
+            </ul>
+          </div>
+          <div
+            v-for="(item, index) in categoryItems"
+            :key="index"
+            v-show="this.isClassSelectOn[index]"
+          >
+            <div class="class-setting-title2 align1">
+              <!--              <div class="class-setting-title2-select align2">-->
+              <!--                <h3>공통속성</h3>-->
+              <!--              </div>-->
+              <div class="align2 class-setting-title2-select">
+                <h3>클래스 별 속성 추가</h3>
               </div>
             </div>
             <ul class="class-setting-contents2">
@@ -700,11 +533,11 @@
                   <div class="align0 attribute-inner">
                     <div>
                       <h3>최소 선택 수</h3>
-                      <input type="number" />
+                      <input type="number" v-model="categoryAttrItem.categoryAttrInputMin"/>
                     </div>
                     <div>
                       <h3>최대 선택 수</h3>
-                      <input type="number" />
+                      <input type="number" v-model="categoryAttrItem.categoryAttrInputMax"/>
                     </div>
                   </div>
                 </div>
@@ -726,9 +559,15 @@
                   <div class="attribute-inner">
                     <h3>글자입력 수</h3>
                     <div class="align4">
-                      <input type="number" />
+                      <input
+                        type="number"
+                        v-model="categoryAttrItem.categoryAttrLengthMin"
+                      />
                       <span>~</span>
-                      <input type="number" />
+                      <input
+                        type="number"
+                        v-model="categoryAttrItem.categoryAttrLengthMax"
+                      />
                     </div>
                   </div>
                 </div>
@@ -893,7 +732,9 @@ import axios from 'axios';
 export default {
   components: { Datepicker },
   mounted() {
-    console.log(this.dataType());
+    const startDate = new Date();
+    const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+    this.collectCrawlingPeriodInput = [startDate, endDate];
   },
   data() {
     return {
@@ -937,11 +778,11 @@ export default {
       ],
       isAllChecked: false,
       //1-1-2.크롤링 수집 데이터
-      collectCrawlingChannel: 'naver', //수집채널
+      collectCrawlingChannel: '', //수집채널
       collectCrawlingKeyword: '', //키워드
-      collectCrawlingPeriod: '1week', //수집 기간
+      collectCrawlingPeriod: '', //수집 기간
       collectCrawlingPeriodInput: '', //수집 기간-직접입력값
-      collectCrawlingCount: 'count100', //수집 건수
+      collectCrawlingCount: '', //수집 건수
       collectCrawlingCountInput: '', //수집 건수-직접입력값
       // checkedValues: [],
       // isAllChecked: true,
@@ -976,20 +817,20 @@ export default {
         categoryAttrDesc: '',
         categoryAttrType: '',
         categoryAttrVal: [],
-        categoryAttrInputMin: Number,
-        categoryAttrInputMax: Number,
-        categoryAttrLengthMin: Number,
-        categoryAttrLengthMax: Number,
+        categoryAttrInputMin: 0,
+        categoryAttrInputMax: 0,
+        categoryAttrLengthMin: 0,
+        categoryAttrLengthMax: 0,
       },
       categoryAttrItemOrigin: {
         categoryAttrName: '',
         categoryAttrDesc: '',
         categoryAttrType: '',
         categoryAttrVal: [],
-        categoryAttrInputMin: Number,
-        categoryAttrInputMax: Number,
-        categoryAttrLengthMin: Number,
-        categoryAttrLengthMax: Number,
+        categoryAttrInputMin: 0,
+        categoryAttrInputMax: 0,
+        categoryAttrLengthMin: 0,
+        categoryAttrLengthMax: 0,
       },
       isClassSelectOn: [],
       attributes: [],
@@ -1022,14 +863,21 @@ export default {
         this.projectWorkStep = '가공';
       }
     },
+    textBoxVisible() {
+      return !['100', '500', '1000', '2000', '3000'].includes(
+        this.collectCrawlingCount,
+      );
+    },
     //데이터 수집 프로젝트 설정 - 데이터 유형
     collectOwnOnOff: function () {
-      this.isCollectOwnOn = !this.isCollectOwnOn;
+      this.isCollectOwnOn = true;
       this.isCollectCrawlingOn = false;
+      this.dataType = 0;
     },
     collectCrawlingOnOff: function () {
       this.isCollectOwnOn = false;
-      this.isCollectCrawlingOn = !this.isCollectCrawlingOn;
+      this.isCollectCrawlingOn = true;
+      this.dataType = 1;
     },
     //데이터 정제/전처리 프로젝트 설정 - 데이터 유형
     cleaningOnOff: function () {
@@ -1053,7 +901,7 @@ export default {
       for (let index = 0; index < this.isClassSelectOn.length; index++) {
         this.isClassSelectOn[index] = false;
       }
-      this.isClassSelectOn[index] = !this.isClassSelectOn[index];
+      this.isClassSelectOn[index] = true;
       this.initClass(index);
       console.log(this.isClassSelectOn);
     },
@@ -1155,12 +1003,14 @@ export default {
       this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
     },
     addAttribute(index) {
+      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
       this.categoryItems[index].categoryAttrItems.push(
         this.categoryAttrsTemp[index],
       );
       console.log(this.categoryItems);
       this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItemOrigin);
-      this.unselectAll();
+      this.categoryAttrItem = _.cloneDeep(this.categoryAttrItemOrigin);
+      this.attrValue = '';
     },
   },
 };
