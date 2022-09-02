@@ -62,7 +62,7 @@
           </ul>
         </article>
       </section>
-      <section v-show="projectType == 'collect'">
+      <section v-show="projectType === 'collect'">
         <article>
           <ul class="current-bar1">
             <li>
@@ -93,15 +93,6 @@
               >
                 크롤링 수집 데이터
               </button>
-              <button
-                @click="collectOfflineOnOff"
-                :class="{
-                  'btn1-active btn1-4': isCollectOfflineOn,
-                  'btn1-4': !isCollectOfflineOn,
-                }"
-              >
-                오프라인 데이터 수집
-              </button>
             </li>
           </ul>
         </article>
@@ -114,7 +105,7 @@
                   type="checkbox"
                   v-model="isAllChecked"
                   value=""
-                  @click="allCheck"
+                  @click="allCheck($event.target.checked)"
                 />
               </th>
               <th><span>데이터셋 번호</span></th>
@@ -129,7 +120,7 @@
                 <input
                   type="checkbox"
                   :value="'id' + index"
-                  v-model="checkedCollectOwn"
+                  v-model="item.selected"
                   @change="clickFunc"
                 />
               </td>
@@ -217,26 +208,6 @@
               <div class="img-wrap">
                 <img
                   src="../../../../assets/images/project/img/google.svg"
-                  alt=""
-                />
-              </div>
-            </li>
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-chanel"
-                  id="collect-chanel-insta"
-                  v-model="collectCrawlingChannel"
-                  value="instagram"
-                />
-                <label for="collect-chanel-insta"
-                  >인스타그램 <span>(Instagram)</span></label
-                >
-              </div>
-              <div class="img-wrap">
-                <img
-                  src="../../../../assets/images/project/img/instagram.svg"
                   alt=""
                 />
               </div>
@@ -400,224 +371,9 @@
             </li>
           </ul>
         </article>
-        <!-- 오프라인 데이터 수집 -->
-        <article
-          class="common1 crolling-collect-data"
-          v-show="isCollectOfflineOn"
-        >
-          <h3>수집 대상</h3>
-          <ul class="align1">
-            <li>
-              <input type="text" v-model="collectOfflineTaget" />
-              <div class="warning" v-show="isCollectOfflineTargetValid">
-                <img
-                  src="../../../../assets/images/project/icon/icon-warning.svg"
-                  alt=""
-                /><span>수집 대상을 입력해주세요.</span>
-              </div>
-            </li>
-          </ul>
-          <h3>수집 각도</h3>
-          <ul class="align1">
-            <li>
-              <select name="" id="" v-model="collectOfflineAngle1">
-                <option value="front">대상 정면 촬영</option>
-                <option value="leftSide">대상 좌측면 촬영</option>
-                <option value="rightSide">대상 우측면 촬영</option>
-                <option value="back">대상 후면 촬영</option>
-              </select>
-              <select name="" id="" v-model="collectOfflineAngle2">
-                <option value="UpToDown">위에서 아래로 촬영</option>
-                <option value="DownToUp">아래에서 위로 촬영</option>
-                <option value="collinear">동일 선상에서 촬영</option>
-              </select>
-            </li>
-          </ul>
-          <h3>수집 기간</h3>
-          <ul class="align1">
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-date"
-                  id="collect-date-week"
-                  v-model="collectOfflinePeriod"
-                  value="1week"
-                />
-                <label for="collect-date-week">1주일</label>
-              </div>
-            </li>
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-date"
-                  id="collect-date-month"
-                  v-model="collectOfflinePeriod"
-                  value="3month"
-                />
-                <label for="collect-date-month">3개월</label>
-              </div>
-            </li>
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-date"
-                  id="collect-date-year"
-                  v-model="collectOfflinePeriod"
-                  value="1year"
-                />
-                <label for="collect-date-year">1년</label>
-              </div>
-            </li>
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-date"
-                  id="collect-date-set"
-                  v-model="collectOfflinePeriod"
-                  value="custom"
-                />
-                <label for="collect-date-set">직접입력 </label>
-                <Datepicker
-                  class="datepicker"
-                  v-model="collectOfflinePeriodInput"
-                  v-show="collectOfflinePeriod == 'custom'"
-                  range
-                  multiCalendars
-                  :enableTimePicker="false"
-                />
-              </div>
-            </li>
-          </ul>
-          <h3>수집 거리</h3>
-          <ul class="align1">
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-distance"
-                  id="collect-distance-1"
-                  v-model="collectOfflineDistance"
-                  value="1To3"
-                />
-                <label for="collect-distance-1">1~3m</label>
-              </div>
-            </li>
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-distance"
-                  id="collect-distance-3"
-                  v-model="collectOfflineDistance"
-                  value="3To5"
-                />
-                <label for="collect-distance-3">3~5m</label>
-              </div>
-            </li>
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-distance"
-                  id="collect-distance-5"
-                  v-model="collectOfflineDistance"
-                  value="5To7"
-                />
-                <label for="collect-distance-5">5~7m</label>
-              </div>
-            </li>
-            <li>
-              <div class="radio-wrap">
-                <input
-                  type="radio"
-                  name="collect-distance"
-                  id="collect-distance-set"
-                  v-model="collectOfflineDistance"
-                  value="custom"
-                />
-                <label for="collect-distance-set">직접입력</label>
-                <div
-                  class="custom-area"
-                  v-show="collectOfflineDistance == 'custom'"
-                >
-                  <p>시작거리</p>
-                  <input type="text" />
-                  <p>m</p>
-                  <span class="wave">~</span>
-                  <p>종료거리</p>
-                  <input type="text" />
-                  <p>m</p>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <h3>수집장소</h3>
-          <ul class="align1">
-            <li>
-              <div class="input-wrap">
-                <input type="text" v-model="collectOfflinePlace" />
-                <div class="warning" v-show="isCollectOfflinePlaceValid">
-                  <img
-                    src="../../../../assets/images/project/icon/icon-warning.svg"
-                    alt=""
-                  /><span>수집장소를 입력해주세요.</span>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <h3>수집 상세내용</h3>
-          <!-- 게시판 -->
-          <ul class="align1">
-            <li>
-              <div class="board">
-                <textarea
-                  name=""
-                  id=""
-                  cols="30"
-                  rows="10"
-                  v-model="collectOfflineContent"
-                ></textarea>
-              </div>
-              <div class="warning" v-show="isCollectOfflineContentValid">
-                <img
-                  src="../../../../assets/images/project/icon/icon-warning.svg"
-                  alt=""
-                /><span>수집 상세내용을 입력해주세요.</span>
-              </div>
-            </li>
-          </ul>
-          <h3>수집 목적</h3>
-          <ul class="align1">
-            <li>
-              <input type="text" v-model="collectOfflinePurpose" />
-              <div class="warning" v-show="isCollectOfflinePurposeValid">
-                <img
-                  src="../../../../assets/images/project/icon/icon-warning.svg"
-                  alt=""
-                /><span>수집 목적을 입력해주세요.</span>
-              </div>
-            </li>
-          </ul>
-          <h3>수집 건수</h3>
-          <ul class="align1">
-            <li>
-              <input type="text" v-model="collectOfflineCount" />
-              <div class="warning" v-show="isCollectOfflineCountValid">
-                <img
-                  src="../../../../assets/images/project/icon/icon-warning.svg"
-                  alt=""
-                /><span>1~10000 사이의 숫자만 입력해 주세요.</span>
-              </div>
-            </li>
-          </ul>
-        </article>
       </section>
       <!-- 데이터 정제/전처리 -->
-      <section v-show="projectType == 'cleaning'">
+      <section v-show="projectType === 'cleaning'">
         <article>
           <ul class="current-bar1">
             <li>
@@ -795,7 +551,7 @@
           </ul>
         </article>
       </section>
-      <section v-show="projectType == 'labeling'">
+      <section v-show="projectType === 'labeling'">
         <article>
           <ul class="current-bar1">
             <li>
@@ -809,253 +565,6 @@
         <article class="align0">
           <ul class="project-class-setting">
             <li class="class-setting-title">
-              <h3>작업 도구 유형</h3>
-            </li>
-            <li
-              @click="toolBoxing"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolBoxing,
-                'align1 class-setting-contents': !this.istoolBoxing,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-boxing02.svg"
-                alt=""
-                v-show="this.istoolBoxing"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-boxing03.svg"
-                alt=""
-                v-show="!this.istoolBoxing"
-              />
-              <b>Boxing</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolPolyline"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolPolyline,
-                'align1 class-setting-contents': !this.istoolPolyline,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-polyline02.svg"
-                alt=""
-                v-show="this.istoolPolyline"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-polyline03.svg"
-                alt=""
-                v-show="!this.istoolPolyline"
-              />
-              <b>Polyline</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolPolygon"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolPolygon,
-                'align1 class-setting-contents': !this.istoolPolygon,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-polygon02.svg"
-                alt=""
-                v-show="this.istoolPolygon"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-polygon03.svg"
-                alt=""
-                v-show="!this.istoolPolygon"
-              />
-              <b>Polygon</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolPoint"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolPoint,
-                'align1 class-setting-contents': !this.istoolPoint,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-point02.svg"
-                alt=""
-                v-show="this.istoolPoint"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-point03.svg"
-                alt=""
-                v-show="!this.istoolPoint"
-              />
-              <b>Point</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolDrawpen"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolDrawpen,
-                'align1 class-setting-contents': !this.istoolDrawpen,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-brush02.svg"
-                alt=""
-                v-show="this.istoolDrawpen"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-brush03.svg"
-                alt=""
-                v-show="!this.istoolDrawpen"
-              />
-              <b>Draw Pen</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="tool3DCube"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istool3DCube,
-                'align1 class-setting-contents': !this.istool3DCube,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-3dcube02.svg"
-                alt=""
-                v-show="this.istool3DCube"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-3dcube03.svg"
-                alt=""
-                v-show="!this.istool3DCube"
-              />
-              <b>3D Cube</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolMagicwand"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolMagicwand,
-                'align1 class-setting-contents': !this.istoolMagicwand,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-magicwand02.svg"
-                alt=""
-                v-show="this.istoolMagicwand"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-magicwand03.svg"
-                alt=""
-                v-show="!this.istoolMagicwand"
-              />
-              <b>Smart Pen</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolKeypoint"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolKeypoint,
-                'align1 class-setting-contents': !this.istoolKeypoint,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-keypoint02.svg"
-                alt=""
-                v-show="this.istoolKeypoint"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-keypoint03.svg"
-                alt=""
-                v-show="!this.istoolKeypoint"
-              />
-              <b>Key Point</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolAutopoint"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolAutopoint,
-                'align1 class-setting-contents': !this.istoolAutopoint,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-autopoint02.svg"
-                alt=""
-                v-show="this.istoolAutopoint"
-              />
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-autopoint03.svg"
-                alt=""
-                v-show="!this.istoolAutopoint"
-              />
-              <b>Auto Point</b>
-            </li>
-            <li
-              class="align1 class-setting-contents"
-              @click="toolSegment"
-              v-bind:class="{
-                'align1 class-setting-contents class-setting-contents-select':
-                  this.istoolSegment,
-                'align1 class-setting-contents': !this.istoolSegment,
-              }"
-            >
-              <img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-segment02.svg"
-                alt=""
-                v-show="this.istoolSegment"
-              /><img
-                class="class-setting-icon"
-                src="../../../../assets/images/studio/icon/icon-segment03.svg"
-                alt=""
-                v-show="!this.istoolSegment"
-              />
-              <b>Segment</b>
-            </li>
-          </ul>
-          <ul
-            class="project-class-setting"
-            v-show="
-              this.istoolBoxing ||
-              this.istoolPolyline ||
-              this.istoolPolygon ||
-              this.istoolPoint ||
-              this.istoolDrawpen ||
-              this.istool3DCube ||
-              this.istoolMagicwand ||
-              this.istoolKeypoint ||
-              this.istoolAutopoint ||
-              this.istoolSegment
-            "
-          >
-            <li class="class-setting-title">
               <h3>클래스</h3>
               <button @click="isPopUpOnOff()">
                 <img
@@ -1068,8 +577,8 @@
               <input
                 type="text"
                 placeholder="클래스 입력 후 Enter"
-                v-model="className"
-                @keypress.enter.stop="classNamesubmit"
+                @keydown.enter.stop="addCate"
+                v-model="categoryItem.categoryName"
                 @focus="isActiveClassSettingTitle = true"
               />
             </li>
@@ -1079,7 +588,7 @@
                   this.isClassSelectOn[index],
                 'align1 class-setting-contents': !this.isClassSelectOn[index],
               }"
-              v-for="(item, index) in ClasslistItem"
+              v-for="(item, index) in categoryItems"
               :key="index"
             >
               <button
@@ -1100,7 +609,7 @@
                   src="../../../../assets/images/project/icon/icon-close02.svg"
                   alt=""
                 /></button
-              ><b @click="isClassSelectOnOff(index)"> {{ item }}</b
+              ><b @click="isClassSelectOnOff(index)"> {{ item.categoryName }}</b
               ><button class="class-more" v-show="isClassSelectOn[index]">
                 <img
                   src="../../../../assets/images/project/icon/icon-arrow01.svg"
@@ -1110,7 +619,7 @@
             </li>
           </ul>
           <div
-            v-for="(item, index) in ClasslistItem"
+            v-for="(item, index) in categoryItems"
             :key="index"
             v-show="this.isClassSelectOn[index]"
           >
@@ -1128,11 +637,18 @@
                 <div class="align0 attribute-inner">
                   <div>
                     <h3>속성명</h3>
-                    <input type="text" />
+                    <input
+                      type="text"
+                      v-model="categoryAttrItem.categoryAttrName"
+                    />
                   </div>
                   <div>
                     <h3>속성유형</h3>
-                    <select name="" id="" v-model="propertyType">
+                    <select
+                      name=""
+                      id=""
+                      v-model="categoryAttrItem.categoryAttrType"
+                    >
                       <option value="classSettingsignleSelect">
                         단일 선택형
                       </option>
@@ -1145,86 +661,27 @@
                 </div>
                 <div
                   class="attribute-inner"
-                  v-show="propertyType == 'classSettingsignleSelect'"
+                  v-show="propertyType === 'classSettingsignleSelect'"
                 >
                   <h3>속성값</h3>
-                  <input type="text" placeholder="속성 값 입력 후 Enter" />
-                  <div class="attribute-value align3">
-                    <span class="align2"
-                      >여자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >남자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >여자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >남자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >여자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >남자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >여자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >남자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >여자
-                      <button>
-                        <img
-                          src="../../../../assets/images/project/icon/icon-close01.svg"
-                          alt=""
-                        /></button
-                    ></span>
-                    <span class="align2"
-                      >남자
-                      <button>
+                  <input
+                    type="text"
+                    v-model="attrValue"
+                    placeholder="속성 값 입력 후 Enter"
+                    @keydown.enter.stop="addAttributeValue(index)"
+                  />
+                  <div
+                    v-show="categoryAttrItem.categoryAttrVal.length"
+                    class="attribute-value align3"
+                  >
+                    <span
+                      class="align2"
+                      v-for="(
+                        attribute, index
+                      ) in categoryAttrItem.categoryAttrVal"
+                      :key="attribute"
+                      >{{ attribute }}
+                      <button @click="deleteAttrValue(index)">
                         <img
                           src="../../../../assets/images/project/icon/icon-close01.svg"
                           alt=""
@@ -1235,30 +692,11 @@
                 <!-- 다중선택형 -->
                 <div
                   class="attribute-inner"
-                  v-show="propertyType == 'classSettingMultipleSelect'"
+                  v-show="
+                    categoryAttrItem.categoryAttrType ===
+                    'classSettingMultipleSelect'
+                  "
                 >
-                  <div class="attribute-inner">
-                    <h3>속성값</h3>
-                    <input type="text" placeholder="속성 값 입력 후 Enter" />
-                    <div class="attribute-value align3">
-                      <span class="align2"
-                        >여자
-                        <button>
-                          <img
-                            src="../../../../assets/images/project/icon/icon-close01.svg"
-                            alt=""
-                          /></button
-                      ></span>
-                      <span class="align2"
-                        >남자
-                        <button>
-                          <img
-                            src="../../../../assets/images/project/icon/icon-close01.svg"
-                            alt=""
-                          /></button
-                      ></span>
-                    </div>
-                  </div>
                   <div class="align0 attribute-inner">
                     <div>
                       <h3>최소 선택 수</h3>
@@ -1273,7 +711,9 @@
                 <!-- 입력형 -->
                 <div
                   class="attribute-inner"
-                  v-show="propertyType == 'classSettingInput'"
+                  v-show="
+                    categoryAttrItem.categoryAttrType === 'classSettingInput'
+                  "
                 >
                   <div class="attribute-inner">
                     <h3>숫자입력 값</h3>
@@ -1297,6 +737,7 @@
               <li class="attribute-wrap align4 attribute-add">
                 <b>추가하기</b>
                 <img
+                  @click="addAttribute(index)"
                   src="../../../../assets/images/project/icon/icon-add2.svg"
                   alt=""
                 />
@@ -1325,7 +766,7 @@
             </li>
             <li>
               <div class="left"><h3>3단계</h3></div>
-              <div class="right">촤종</div>
+              <div class="right">최종</div>
             </li>
           </ul>
         </article>
@@ -1342,6 +783,7 @@
         <a href="all-project.html" class="btn-set btn1-1">취소</a>
       </div>
     </main>
+    <!--    클래스 세부 설정-->
     <div class="project-popup-wrap" v-show="isPopUpOn">
       <ul class="project-popup1">
         <li class="project-popup-title align2">
@@ -1445,15 +887,15 @@
 //import fs from 'fs';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-
-//import axios from 'axios';
-
-//fs.writeFile('../../../../api/ProjectData.json', 'data');
-//fs.writeFileSync('../../../../api/ProjectData.json', 'data');
+import _ from 'lodash';
+import axios from 'axios';
 
 export default {
   components: { Datepicker },
-  data: function () {
+  mounted() {
+    console.log(this.dataType());
+  },
+  data() {
     return {
       //1. 전체
       projectName: '', //프로젝트 명
@@ -1463,8 +905,7 @@ export default {
       //1-1.데이터 수집
       isCollectOwnOn: true, //자제 제공 데이터셋
       isCollectCrawlingOn: false, //크롤링 수집 데이터
-      isCollectOfflineOn: false, // 오프라인 데이터 수집
-
+      dataType: -1,
       //1-1-1.자체 제공 데이터셋
       checkedCollectOwn: [], //목록 선택 체크박스
       collectOwnListItem: [
@@ -1494,6 +935,7 @@ export default {
           datasetVolume: '3GB',
         },
       ],
+      isAllChecked: false,
       //1-1-2.크롤링 수집 데이터
       collectCrawlingChannel: 'naver', //수집채널
       collectCrawlingKeyword: '', //키워드
@@ -1501,18 +943,6 @@ export default {
       collectCrawlingPeriodInput: '', //수집 기간-직접입력값
       collectCrawlingCount: 'count100', //수집 건수
       collectCrawlingCountInput: '', //수집 건수-직접입력값
-
-      //1-1-3.오프라인 데이터 수집
-      collectOfflineTaget: '',
-      collectOfflineAngle1: 'front',
-      collectOfflineAngle2: 'UpToDown',
-      collectOfflinePeriod: '1week',
-      collectOfflineDistance: '1To3',
-      collectOfflinePlace: '',
-      collectOfflineContent: '',
-      collectOfflinePurpose: '',
-      collectOfflineCount: '',
-
       // checkedValues: [],
       // isAllChecked: true,
 
@@ -1526,29 +956,44 @@ export default {
       //1-2-2.이미지 전처리
       PreprocessingFunction: [],
 
-      //1-3.데이터 가공
-      istoolBoxing: false,
-      istoolPolyline: false,
-      istoolPolygon: false,
-      istoolPoint: false,
-      istoolDrawpen: false,
-      istool3DCube: false,
-      istoolMagicwand: false,
-      istoolKeypoint: false,
-      istoolAutopoint: false,
-      istoolSegment: false,
-
       className: '',
-      ClasslistItem: [],
 
       isPopUpOn: false, //클래스 세부 설정 팝업
-
       propertyType: 'classSettingsignleSelect',
       classSettingMultipleChoice: false,
       classSettingInput: false,
 
+      categoryItems: [],
+      categoryAttrsTemp: [],
+      categoryItem: {
+        categoryName: '',
+        categoryParentId: Number,
+        categoryColor: Number,
+        categoryAttrItems: [],
+      },
+      categoryAttrItem: {
+        categoryAttrName: '',
+        categoryAttrDesc: '',
+        categoryAttrType: '',
+        categoryAttrVal: [],
+        categoryAttrInputMin: Number,
+        categoryAttrInputMax: Number,
+        categoryAttrLengthMin: Number,
+        categoryAttrLengthMax: Number,
+      },
+      categoryAttrItemOrigin: {
+        categoryAttrName: '',
+        categoryAttrDesc: '',
+        categoryAttrType: '',
+        categoryAttrVal: [],
+        categoryAttrInputMin: Number,
+        categoryAttrInputMax: Number,
+        categoryAttrLengthMin: Number,
+        categoryAttrLengthMax: Number,
+      },
       isClassSelectOn: [],
-
+      attributes: [],
+      attrValue: '',
       projectWorkStep: '수집',
     };
   },
@@ -1566,45 +1011,14 @@ export default {
         this.collectCrawlingKeyword.length > 10
       );
     },
-    isCollectOfflineTargetValid() {
-      return (
-        this.collectOfflineTaget.length < 1 ||
-        this.collectOfflineTaget.length > 20
-      );
-    },
-    isCollectOfflinePlaceValid() {
-      return (
-        this.collectOfflinePlace.length < 1 ||
-        this.collectOfflinePlace.length > 20
-      );
-    },
-    isCollectOfflineContentValid() {
-      return (
-        this.collectOfflineContent.length < 1 ||
-        this.collectOfflineContent.length > 500
-      );
-    },
-    isCollectOfflinePurposeValid() {
-      return (
-        this.collectOfflinePurpose.length < 1 ||
-        this.collectOfflinePurpose.length > 50
-      );
-    },
-    isCollectOfflineCountValid() {
-      return (
-        parseInt(this.collectOfflineCount) < 1 ||
-        parseInt(this.collectOfflineCount) > 10000
-      );
-    },
   },
-
   methods: {
     projectWorkStepSelect: function () {
-      if (this.projectType == 'collect') {
+      if (this.projectType === 'collect') {
         this.projectWorkStep = '수집';
-      } else if (this.projectType == 'cleaning') {
+      } else if (this.projectType === 'cleaning') {
         this.projectWorkStep = '정제';
-      } else if (this.projectType == 'labeling') {
+      } else if (this.projectType === 'labeling') {
         this.projectWorkStep = '가공';
       }
     },
@@ -1612,17 +1026,10 @@ export default {
     collectOwnOnOff: function () {
       this.isCollectOwnOn = !this.isCollectOwnOn;
       this.isCollectCrawlingOn = false;
-      this.isCollectOfflineOn = false;
     },
     collectCrawlingOnOff: function () {
       this.isCollectOwnOn = false;
       this.isCollectCrawlingOn = !this.isCollectCrawlingOn;
-      this.isCollectOfflineOn = false;
-    },
-    collectOfflineOnOff: function () {
-      this.isCollectOwnOn = false;
-      this.isCollectCrawlingOn = false;
-      this.isCollectOfflineOn = !this.isCollectOfflineOn;
     },
     //데이터 정제/전처리 프로젝트 설정 - 데이터 유형
     cleaningOnOff: function () {
@@ -1633,43 +1040,11 @@ export default {
       this.isCleaningOn = false;
       this.isPreprocessingOn = !this.isPreprocessingOn;
     },
-    //데이터 가공 프로젝트 설정 - 작업도구 설정
-    toolBoxing() {
-      this.istoolBoxing = !this.istoolBoxing;
-    },
-    toolPolyline() {
-      this.istoolPolyline = !this.istoolPolyline;
-    },
-    toolPolygon() {
-      this.istoolPolygon = !this.istoolPolygon;
-    },
-    toolPoint() {
-      this.istoolPoint = !this.istoolPoint;
-    },
-    toolDrawpen() {
-      this.istoolDrawpen = !this.istoolDrawpen;
-    },
-    tool3DCube() {
-      this.istool3DCube = !this.istool3DCube;
-    },
-    toolMagicwand() {
-      this.istoolMagicwand = !this.istoolMagicwand;
-    },
-    toolKeypoint() {
-      this.istoolKeypoint = !this.istoolKeypoint;
-    },
-    toolAutopoint() {
-      this.istoolAutopoint = !this.istoolAutopoint;
-    },
-    toolSegment() {
-      this.istoolSegment = !this.istoolSegment;
-    },
-    classNamesubmit() {
-      this.ClasslistItem.push(this.className);
-      this.className = '';
-    },
+
     classNameDelete(index) {
-      this.ClasslistItem.splice(index, 1);
+      this.categoryItems.splice(index, 1);
+      this.categoryAttrsTemp.splice(index, 1);
+      this.unselectAll();
     },
     isPopUpOnOff() {
       this.isPopUpOn = !this.isPopUpOn;
@@ -1679,18 +1054,21 @@ export default {
         this.isClassSelectOn[index] = false;
       }
       this.isClassSelectOn[index] = !this.isClassSelectOn[index];
-
+      this.initClass(index);
       console.log(this.isClassSelectOn);
     },
-
+    initClass(index) {
+      this.categoryAttrItem = this.categoryAttrsTemp[index];
+      this.attrValue = '';
+    },
     async submitForm() {
-      if (this.collectCrawlingPeriod == 'custom') {
+      if (this.collectCrawlingPeriod === 'custom') {
         this.collectCrawlingPeriod = this.collectCrawlingPeriodInput;
       }
-      if (this.collectCrawlingCount == 'countcustom') {
+      if (this.collectCrawlingCount === 'countcustom') {
         this.collectCrawlingCount = this.collectCrawlingCountInput;
       }
-      const ProejctCommonData = {
+      const ProjectCommonData = {
         projectName: this.projectName.trim(),
         projectExplain: this.projectExplain,
         projectType: this.projectType,
@@ -1704,17 +1082,6 @@ export default {
         collectCrawlingPeriod: this.collectCrawlingPeriod,
         collectCrawlingCount: this.collectCrawlingCount,
       };
-      const CollectOfflineData = {
-        collectOfflineTaget: this.collectOfflineTaget,
-        collectOfflineAngle1: this.collectOfflineAngle1,
-        collectOfflineAngle2: this.collectOfflineAngle2,
-        collectOfflinePeriod: this.collectOfflinePeriod,
-        collectOfflineDistance: this.collectOfflineDistance,
-        collectOfflinePlace: this.collectOfflinePlace,
-        collectOfflineContent: this.collectOfflineContent,
-        collectOfflinePurpose: this.collectOfflinePurpose,
-        collectOfflineCount: this.collectOfflineCount,
-      };
       const CleaningData = {
         CleaningFunction: this.CleaningFunction,
       };
@@ -1722,21 +1089,22 @@ export default {
         PreprocessingFunction: this.PreprocessingFunction,
       };
 
-      console.log(ProejctCommonData);
+      console.log(ProjectCommonData);
       console.log(CollectOwnData);
       console.log(CollectCrawlingData);
-      console.log(CollectOfflineData);
       console.log(CleaningData);
       console.log(PreprocessingData);
-
       alert('프로젝트가 생성되었습니다.');
 
-      this.$router.push({
+      //TODO: requestBody 데이터 추가
+      await axios.post('/rest/api/1/project/create', {
+        project_name: this.projectName,
+        project_desc: this.projectExplain,
+        project_type: this.projectType,
+      });
+
+      await this.$router.push({
         name: 'allprojectlist',
-        params: {
-          projectName: this.projectName,
-          projectType: this.projectType,
-        },
       });
     },
 
@@ -1758,6 +1126,41 @@ export default {
     },
     clickFunc() {
       console.log(this.checkedCollectOwn);
+    },
+    unselectAll: function () {
+      for (let i = 0; i < this.isClassSelectOn.length; i++) {
+        this.isClassSelectOn[i] = false;
+      }
+    },
+    addCate: function () {
+      this.unselectAll();
+      let categoryItem = _.cloneDeep(this.categoryItem);
+      this.categoryItems.push(categoryItem);
+      this.categoryAttrsTemp.push(_.cloneDeep(this.categoryAttrItemOrigin));
+      this.categoryItem.categoryName = '';
+    },
+    allCheck(checked) {
+      this.isAllChecked = checked;
+      for (let i in this.collectOwnListItem) {
+        this.collectOwnListItem[i].selected = this.isAllChecked;
+      }
+    },
+    addAttributeValue(index) {
+      this.categoryAttrItem.categoryAttrVal.push(this.attrValue);
+      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
+      this.attrValue = '';
+    },
+    deleteAttrValue(index) {
+      this.categoryAttrItem.categoryAttrVal.splice(index, 1);
+      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
+    },
+    addAttribute(index) {
+      this.categoryItems[index].categoryAttrItems.push(
+        this.categoryAttrsTemp[index],
+      );
+      console.log(this.categoryItems);
+      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItemOrigin);
+      this.unselectAll();
     },
   },
 };
