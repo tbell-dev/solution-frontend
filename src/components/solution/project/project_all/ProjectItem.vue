@@ -1,24 +1,19 @@
 <template>
   <tr>
     <td>
-      <span>{{ project.no }}</span>
+      <span>{{ project.project_id }}</span>
     </td>
     <td>
-      <span>{{ project.projectType }}</span>
+      <span>{{ project.project_type.project_type_name }}</span>
     </td>
     <td>
-      <router-link
-        :to="{
-          path: '/allProject' + project.projectTypeLink + '/folderlist',
-        }"
-        >{{ project.projectName }}
-      </router-link>
+      <span>{{ project.project_name }}</span>
     </td>
     <td>
-      <span>{{ project.projectWorker }}명</span>
+      <span>{{ project.project_manger }}명</span>
     </td>
     <td>
-      <span>{{ project.date }}</span>
+      <span>{{ createdTime }}</span>
     </td>
     <td class="table1-more">
       <button @click="update">
@@ -27,25 +22,25 @@
           alt=""
         />
       </button>
-      <ul class="more-detail" v-show="updateState">
-        <li>
-          <button>
-            <router-link
-              :to="{
-                path:
-                  '/allProject' +
-                  project.projectTypeLink +
-                  '/setting/' +
-                  project.projectTypeLink.split('_')[1],
-              }"
-              ><span>수정</span></router-link
-            >
-          </button>
-        </li>
-        <li>
-          <button><span>삭제</span></button>
-        </li>
-      </ul>
+<!--      <ul class="more-detail" v-show="updateState">-->
+<!--        <li>-->
+<!--          <button>-->
+<!--            <router-link-->
+<!--              :to="{-->
+<!--                path:-->
+<!--                  '/allProject' +-->
+<!--                  project.projectTypeLink +-->
+<!--                  '/setting/' +-->
+<!--                  project.projectTypeLink.split('_')[1],-->
+<!--              }"-->
+<!--              ><span>수정</span></router-link-->
+<!--            >-->
+<!--          </button>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <button><span>삭제</span></button>-->
+<!--        </li>-->
+<!--      </ul>-->
     </td>
   </tr>
 </template>
@@ -64,6 +59,10 @@ export default {
   },
   computed: {
     ...mapState('allProject', ['projects']),
+    createdTime() {
+      let createdDate = new Date(this.project.created);
+      return createdDate.toLocaleDateString();
+    },
   },
   data() {
     return {

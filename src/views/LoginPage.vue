@@ -133,7 +133,7 @@ export default {
     const id = ref('admin01');
     const password = ref('qwer1');
     const login = async () => {
-      await axios.post('http://210.113.122.196:8826/rest/api/1/auth/login', {
+      await axios.post('http://210.113.122.196:8825/rest/api/1/auth/login', {
         user_id: id.value,
         user_password: password.value,
       });

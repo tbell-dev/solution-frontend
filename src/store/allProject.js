@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _uniqBy from 'lodash/uniqBy';
+axios.defaults.withCredentials = true;
 
 export default {
   state: () => ({
@@ -19,10 +20,10 @@ export default {
         const res = await _getProjectList({
           ...payload,
         });
-        const project = res.data;
+        const project = res.data.datas;
         console.log(project);
         commit('updateState', {
-          projects: _uniqBy(project, 'projectName'),
+          projects: _uniqBy(project, 'project_id'),
         });
       } catch (message) {
         commit('updateState', {
@@ -41,7 +42,7 @@ function _getProjectList(payload) {
   return new Promise((resolve, reject) => {
     axios
       .get(
-        `http://210.113.122.196:8826/rest/api/1/project/search?project_created_start=1061790170`,
+        `http://210.113.122.196:8825/rest/api/1/project/search?project_created_start=1061790170`,
       )
       .then(r => {
         if (r.data.Error) {

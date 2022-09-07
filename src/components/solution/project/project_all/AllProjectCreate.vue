@@ -399,7 +399,7 @@
                   type="text"
                   placeholder="클래스 입력 후 Enter"
                   @keydown.enter.prevent="addCate"
-                  v-model="categoryItem.categoryName"
+                  v-model="AnnotationCategory.annotation_category_name"
                   @focus="isActiveClassSettingTitle = true"
                 />
               </li>
@@ -409,12 +409,9 @@
                     this.isClassSelectOn[index],
                   'align1 class-setting-contents': !this.isClassSelectOn[index],
                 }"
-                v-for="(item, index) in categoryItems"
+                v-for="(item, index) in project_categories"
                 :key="index"
               >
-                <span style="margin-right: 5px">
-                  <input type="color" v-model="item.categoryColor" />
-                </span>
                 <button
                   class="close"
                   @click="classNameDelete(index)"
@@ -439,8 +436,17 @@
                     alt=""
                   />
                 </button>
-                <b @click="isClassSelectOnOff(index)">
-                  {{ item.categoryName }}</b
+                <div style="float: right; cursor: pointer">
+                  <input
+                    type="color"
+                    v-model="item.annotation_category_color"
+                  />
+                </div>
+                <b
+                  :class="{ selectedAttr: isClassSelectOn[index] }"
+                  @click="isClassSelectOnOff(index)"
+                >
+                  {{ item.annotation_category_name }}</b
                 >
                 <button
                   type="button"
@@ -456,7 +462,7 @@
               </li>
             </ul>
             <div
-              v-for="(item, index) in categoryItems"
+              v-for="(item, index) in project_categories"
               :key="index"
               v-show="this.isClassSelectOn[index]"
             >
@@ -466,20 +472,44 @@
                 </li>
                 <li
                   class="align1 class-setting-contents"
-                  v-for="(item, itemIndex) in categoryItems[index]
-                    .categoryAttrItems"
+                  v-for="(item, itemIndex) in project_categories[index]
+                    .annotation_category_attributes"
                   :key="item"
                 >
+                  <button
+                    class="close"
+                    @click="deleteAttr(index, itemIndex)"
+                    v-show="!this.isAttrSelectOn[itemIndex]"
+                    type="button"
+                    style="cursor: pointer"
+                  >
+                    <img
+                      src="../../../../assets/images/project/icon/icon-close01.svg"
+                      alt=""
+                    />
+                  </button>
+                  <button
+                    class="close"
+                    @click="deleteAttr(index, itemIndex)"
+                    v-show="this.isAttrSelectOn[itemIndex]"
+                    type="button"
+                    style="cursor: pointer"
+                  >
+                    <img
+                      src="../../../../assets/images/project/icon/icon-close02.svg"
+                      alt=""
+                    />
+                  </button>
                   <b
                     :class="{ selectedAttr: isAttrSelectOn[itemIndex] }"
                     @click.stop="isAttrSelectOnOff(index, itemIndex)"
-                    >{{ item.categoryAttrName }}
+                    >{{ item.annotation_category_attr_name }}
                   </b>
                 </li>
               </ul>
             </div>
             <div
-              v-for="(item, index) in categoryItems"
+              v-for="(item, index) in project_categories"
               :key="index"
               v-show="this.isClassSelectOn[index]"
             >
@@ -499,7 +529,9 @@
                       <h3>속성명</h3>
                       <input
                         type="text"
-                        v-model="categoryAttrItem.categoryAttrName"
+                        v-model="
+                          AnnotationCategoryAttribute.annotation_category_attr_name
+                        "
                       />
                     </div>
                     <div>
@@ -507,22 +539,17 @@
                       <select
                         name=""
                         id=""
-                        v-model="categoryAttrItem.categoryAttrType"
+                        v-model="
+                          AnnotationCategoryAttribute.annotation_category_attr_type
+                        "
                       >
-                        <option value="classSettingsignleSelect">
-                          단일 선택형
-                        </option>
-                        <option value="classSettingMultipleSelect">
-                          다중 선택형
-                        </option>
-                        <option value="classSettingInput">입력형</option>
+                        <option value="1">단일 선택형</option>
+                        <option value="2">다중 선택형</option>
+                        <option value="3">입력형</option>
                       </select>
                     </div>
                   </div>
-                  <div
-                    class="attribute-inner"
-                    v-show="propertyType === 'classSettingsignleSelect'"
-                  >
+                  <div class="attribute-inner" v-show="propertyType === '1'">
                     <h3>속성값</h3>
                     <input
                       type="text"
@@ -531,14 +558,17 @@
                       @keydown.enter.prevent="addAttributeValue(index)"
                     />
                     <div
-                      v-show="categoryAttrItem.categoryAttrVal.length"
+                      v-show="
+                        AnnotationCategoryAttribute.annotation_category_attr_val
+                          .length
+                      "
                       class="attribute-value align3"
                     >
                       <span
                         class="align2"
                         v-for="(
                           attribute, index
-                        ) in categoryAttrItem.categoryAttrVal"
+                        ) in AnnotationCategoryAttribute.annotation_category_attr_val"
                         :key="attribute"
                         >{{ attribute }}
                         <button
@@ -557,8 +587,8 @@
                   <div
                     class="attribute-inner"
                     v-show="
-                      categoryAttrItem.categoryAttrType ===
-                      'classSettingMultipleSelect'
+                      AnnotationCategoryAttribute.annotation_category_attr_type ===
+                      '2'
                     "
                   >
                     <div class="align0 attribute-inner">
@@ -566,14 +596,18 @@
                         <h3>최소 선택 수</h3>
                         <input
                           type="number"
-                          v-model="categoryAttrItem.categoryAttrInputMin"
+                          v-model="
+                            AnnotationCategoryAttribute.annotation_category_attr_limit_min
+                          "
                         />
                       </div>
                       <div>
                         <h3>최대 선택 수</h3>
                         <input
                           type="number"
-                          v-model="categoryAttrItem.categoryAttrInputMax"
+                          v-model="
+                            AnnotationCategoryAttribute.annotation_category_attr_limit_max
+                          "
                         />
                       </div>
                     </div>
@@ -582,7 +616,8 @@
                   <div
                     class="attribute-inner"
                     v-show="
-                      categoryAttrItem.categoryAttrType === 'classSettingInput'
+                      AnnotationCategoryAttribute.annotation_category_attr_type ===
+                      '3'
                     "
                   >
                     <div class="attribute-inner">
@@ -593,20 +628,20 @@
                         <input type="number" />
                       </div>
                     </div>
-                    <div class="attribute-inner">
-                      <h3>글자입력 수</h3>
-                      <div class="align4">
-                        <input
-                          type="number"
-                          v-model="categoryAttrItem.categoryAttrLengthMin"
-                        />
-                        <span>~</span>
-                        <input
-                          type="number"
-                          v-model="categoryAttrItem.categoryAttrLengthMax"
-                        />
-                      </div>
-                    </div>
+                    <!--                    <div class="attribute-inner">-->
+                    <!--                      <h3>글자입력 수</h3>-->
+                    <!--                      <div class="align4">-->
+                    <!--                        <input-->
+                    <!--                          type="number"-->
+                    <!--                          v-model="AnnotationCategoryAttribute.categoryAttrLengthMin"-->
+                    <!--                        />-->
+                    <!--                        <span>~</span>-->
+                    <!--                        <input-->
+                    <!--                          type="number"-->
+                    <!--                          v-model="AnnotationCategoryAttribute.categoryAttrLengthMax"-->
+                    <!--                        />-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
                   </div>
                 </li>
 
@@ -872,37 +907,33 @@ export default {
       className: '',
 
       isPopUpOn: false, //클래스 세부 설정 팝업
-      propertyType: 'classSettingsignleSelect',
+      propertyType: '1',
       classSettingMultipleChoice: false,
-      classSettingInput: false,
+      3: false,
 
-      categoryItems: [],
+      project_categories: [],
       categoryAttrsTemp: [],
-      categoryItem: {
-        categoryName: '',
-        categoryParentId: Number,
-        categoryColor: '',
-        categoryAttrItems: [],
+      AnnotationCategory: {
+        annotation_category_name: '',
+        annotation_category_parent_id: -1,
+        annotation_category_color: '',
+        annotation_category_attributes: [],
       },
-      categoryAttrItem: {
-        categoryAttrName: '',
-        categoryAttrDesc: '',
-        categoryAttrType: '',
-        categoryAttrVal: [],
-        categoryAttrInputMin: 0,
-        categoryAttrInputMax: 0,
-        categoryAttrLengthMin: 0,
-        categoryAttrLengthMax: 0,
+      AnnotationCategoryAttribute: {
+        annotation_category_attr_name: '',
+        annotation_category_attr_desc: '',
+        annotation_category_attr_type: '',
+        annotation_category_attr_val: [],
+        annotation_category_attr_limit_min: 0,
+        annotation_category_attr_limit_max: 1,
       },
-      categoryAttrItemOrigin: {
-        categoryAttrName: '',
-        categoryAttrDesc: '',
-        categoryAttrType: '',
-        categoryAttrVal: [],
-        categoryAttrInputMin: 0,
-        categoryAttrInputMax: 0,
-        categoryAttrLengthMin: 0,
-        categoryAttrLengthMax: 0,
+      AnnotationCategoryAttributeOrigin: {
+        annotation_category_attr_name: '',
+        annotation_category_attr_desc: '',
+        annotation_category_attr_type: '',
+        annotation_category_attr_val: [],
+        annotation_category_attr_limit_min: 0,
+        annotation_category_attr_limit_max: 1,
       },
       isClassSelectOn: [],
       isAttrSelectOn: [],
@@ -940,8 +971,9 @@ export default {
     },
     isFullFilled() {
       return !(
-        this.categoryAttrItem.categoryAttrType !== '' &&
-        this.categoryAttrItem.categoryAttrVal.length !== 0
+        this.AnnotationCategoryAttribute.annotation_category_attr_type !== '' &&
+        this.AnnotationCategoryAttribute.annotation_category_attr_val.length !==
+          0
       );
     },
   },
@@ -969,8 +1001,15 @@ export default {
     //데이터 정제/전처리 프로젝트 설정 - 데이터 유형
 
     classNameDelete(index) {
-      this.categoryItems.splice(index, 1);
+      this.project_categories.splice(index, 1);
       this.categoryAttrsTemp.splice(index, 1);
+      this.unselectAll();
+    },
+    deleteAttr(index, itemIndex) {
+      this.project_categories[index].annotation_category_attributes.splice(
+        itemIndex,
+        1,
+      );
       this.unselectAll();
     },
     isPopUpOnOff() {
@@ -984,8 +1023,10 @@ export default {
       this.initClass(index);
     },
     isAttrSelectOnOff(index, itemIndex) {
-      this.categoryAttrItem = _.cloneDeep(
-        this.categoryItems[index].categoryAttrItems[itemIndex],
+      this.AnnotationCategoryAttribute = _.cloneDeep(
+        this.project_categories[index].annotation_category_attributes[
+          itemIndex
+        ],
       );
       for (let i = 0; i < this.isAttrSelectOn.length; i++) {
         if (i === itemIndex) continue;
@@ -1000,44 +1041,18 @@ export default {
     },
     initClass(index) {
       this.isAttrSelectOn = new Array(
-        this.categoryItems[index].categoryAttrItems.length,
+        this.project_categories[index].annotation_category_attributes.length,
       );
       this.isAttrSelectOn.fill(false);
-      this.categoryAttrItem = this.categoryAttrsTemp[index];
+      this.AnnotationCategoryAttribute = this.categoryAttrsTemp[index];
       this.attrValue = '';
     },
-    submitForm(e) {
+    async submitForm(e) {
       if (!this.projectName) {
         this.errors.push('Name required.');
         console.log(this.errors);
       }
 
-      if (this.collectCrawlingPeriod === 'custom') {
-        this.collectCrawlingPeriod = this.collectCrawlingPeriodInput;
-      }
-      if (this.collectCrawlingCount === 'countcustom') {
-        this.collectCrawlingCount = this.collectCrawlingCountInput;
-      }
-      const ProjectCommonData = {
-        projectName: this.projectName.trim(),
-        projectExplain: this.projectExplain,
-        projectType: this.projectType,
-      };
-      const CollectOwnData = {
-        checkedCollectOwn: this.checkedCollectOwn,
-      };
-      const CollectCrawlingData = {
-        collectCrawlingChannel: this.collectCrawlingChannel,
-        collectCrawlingKeyword: this.collectCrawlingKeyword,
-        collectCrawlingPeriod: this.collectCrawlingPeriod,
-        collectCrawlingCount: this.collectCrawlingCount,
-      };
-      const CleaningData = {
-        CleaningFunction: this.CleaningFunction,
-      };
-      const PreprocessingData = {
-        PreprocessingFunction: this.PreprocessingFunction,
-      };
       if (!this.projectName) {
         return 'This field is required';
       }
@@ -1052,17 +1067,27 @@ export default {
       this.formValidation();
       e.preventDefault();
       // //TODO: requestBody 데이터 추가
-      // await axios.post('/rest/api/1/project/create', {
-      //   project_name: this.projectName,
-      //   project_desc: this.projectExplain,
-      //   project_type: this.projectType,
-      // });
+      const ProjectDetailCollect = {};
+      const ProjectDetailProcessing = {
+        project_categories: this.project_categories,
+      };
+      try {
+        await axios.post(
+          'http://210.113.122.196:8825/rest/api/1/project/create',
+          {
+            project_name: this.projectName,
+            project_desc: this.projectExplain,
+            project_type: {
+              project_type_id: 4,
+              project_type_name: this.projectType,
+            },
+            project_detail: ProjectDetailProcessing,
+          },
+        );
+      } catch (err) {
+        console.log(err);
+      }
 
-      console.log(ProjectCommonData);
-      console.log(CollectOwnData);
-      console.log(CollectCrawlingData);
-      console.log(CleaningData);
-      console.log(PreprocessingData);
       alert('프로젝트가 생성되었습니다.');
     },
 
@@ -1091,26 +1116,31 @@ export default {
       }
     },
     addCate: function () {
-      if (!this.categoryItem.categoryName) {
+      if (!this.AnnotationCategory.annotation_category_name) {
         alert('값을 입력해주세요');
         return;
       }
-      for (const item of this.categoryItems) {
-        if (item.categoryName === this.categoryItem.categoryName) {
+      for (const item of this.project_categories) {
+        if (
+          item.annotation_category_name ===
+          this.AnnotationCategory.annotation_category_name
+        ) {
           alert('이미 존재하는 값입니다');
           return;
         }
       }
       this.unselectAll();
-      let categoryItem = _.cloneDeep(this.categoryItem);
-      while (categoryItem.categoryColor.length !== 7) {
-        categoryItem.categoryColor = `#${Math.round(
+      let AnnotationCategory = _.cloneDeep(this.AnnotationCategory);
+      while (AnnotationCategory.annotation_category_color.length !== 7) {
+        AnnotationCategory.annotation_category_color = `#${Math.round(
           Math.random() * 0xffffff,
         ).toString(16)}`;
       }
-      this.categoryItems.push(categoryItem);
-      this.categoryAttrsTemp.push(_.cloneDeep(this.categoryAttrItemOrigin));
-      this.categoryItem.categoryName = '';
+      this.project_categories.push(AnnotationCategory);
+      this.categoryAttrsTemp.push(
+        _.cloneDeep(this.AnnotationCategoryAttributeOrigin),
+      );
+      this.AnnotationCategory.annotation_category_name = '';
     },
     allCheck(checked) {
       this.isAllChecked = checked;
@@ -1119,53 +1149,90 @@ export default {
       }
     },
     addAttributeValue(index) {
-      if (this.categoryAttrItem.categoryAttrVal.includes(this.attrValue)) {
+      if (
+        this.AnnotationCategoryAttribute.annotation_category_attr_val.includes(
+          this.attrValue,
+        )
+      ) {
         alert('속성값이 이미 존재합니다');
         return;
       }
-      this.categoryAttrItem.categoryAttrVal.push(this.attrValue);
-      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
+      this.AnnotationCategoryAttribute.annotation_category_attr_val.push(
+        this.attrValue,
+      );
+      this.categoryAttrsTemp[index] = _.cloneDeep(
+        this.AnnotationCategoryAttribute,
+      );
       this.attrValue = '';
     },
     deleteAttrValue(index) {
-      this.categoryAttrItem.categoryAttrVal.splice(index, 1);
-      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
+      this.AnnotationCategoryAttribute.annotation_category_attr_val.splice(
+        index,
+        1,
+      );
+      this.categoryAttrsTemp[index] = _.cloneDeep(
+        this.AnnotationCategoryAttribute,
+      );
     },
     addAttribute(index) {
-      for (const item of this.categoryItems[index].categoryAttrItems) {
-        if (item.categoryAttrName === this.categoryAttrItem.categoryAttrName) {
+      for (const item of this.project_categories[index]
+        .annotation_category_attributes) {
+        if (
+          item.annotation_category_attr_name ===
+          this.AnnotationCategoryAttribute.annotation_category_attr_name
+        ) {
           alert('속성명이 이미 존재합니다.');
           return;
         }
       }
-      if (this.categoryAttrItem.categoryAttrName === '') {
+      if (
+        this.AnnotationCategoryAttribute.annotation_category_attr_name === ''
+      ) {
         alert('속성명을 적어주세요.');
         return;
       }
-      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
-      this.categoryItems[index].categoryAttrItems.push(
+      this.categoryAttrsTemp[index] = _.cloneDeep(
+        this.AnnotationCategoryAttribute,
+      );
+      this.project_categories[index].annotation_category_attributes.push(
         this.categoryAttrsTemp[index],
       );
-      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItemOrigin);
-      this.categoryAttrItem = _.cloneDeep(this.categoryAttrItemOrigin);
+      this.categoryAttrsTemp[index] = _.cloneDeep(
+        this.AnnotationCategoryAttributeOrigin,
+      );
+      this.AnnotationCategoryAttribute = _.cloneDeep(
+        this.AnnotationCategoryAttributeOrigin,
+      );
       this.attrValue = '';
     },
     updateAttribute(index, attrIndex) {
-      for (const item of this.categoryItems[index].categoryAttrItems) {
-        if (item.categoryAttrName === this.categoryAttrItem.categoryAttrName) {
+      for (const item of this.project_categories[index]
+        .annotation_category_attributes) {
+        if (
+          item.annotation_category_attr_name ===
+          this.AnnotationCategoryAttribute.annotation_category_attr_name
+        ) {
           alert('속성명이 이미 존재합니다.');
           return;
         }
       }
-      if (this.categoryAttrItem.categoryAttrName === '') {
+      if (
+        this.AnnotationCategoryAttribute.annotation_category_attr_name === ''
+      ) {
         alert('속성명을 적어주세요.');
         return;
       }
-      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
-      this.categoryItems[index].categoryAttrItems[attrIndex] =
+      this.categoryAttrsTemp[index] = _.cloneDeep(
+        this.AnnotationCategoryAttribute,
+      );
+      this.project_categories[index].annotation_category_attributes[attrIndex] =
         this.categoryAttrsTemp[index];
-      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItemOrigin);
-      this.categoryAttrItem = _.cloneDeep(this.categoryAttrItemOrigin);
+      this.categoryAttrsTemp[index] = _.cloneDeep(
+        this.AnnotationCategoryAttributeOrigin,
+      );
+      this.AnnotationCategoryAttribute = _.cloneDeep(
+        this.AnnotationCategoryAttributeOrigin,
+      );
       this.attrValue = '';
       this.isAttrSelectOnOff(index, attrIndex);
     },
@@ -1222,6 +1289,6 @@ export default {
 <style>
 .selectedAttr {
   color: blue;
-  font-weight: bold;
+  font-weight: 800;
 }
 </style>
