@@ -1,16 +1,15 @@
 <template>
   <form @submit="submitForm">
-    <p v-if="errors.length">
-      <b>Please correct the following error(s):</b>
-    </p>
-
-    <ul>
-      <li v-for="error in errors" :key="error">{{ error }}</li>
-    </ul>
     <div id="main-wrap">
       <main id="main">
         <section>
           <article>
+            <ul
+              v-show="errors.length"
+              style="color: red; font-size: 15px; margin-bottom: 10px"
+            >
+              <li v-for="error in errors" :key="error">*{{ error }}</li>
+            </ul>
             <ul class="common-layout1">
               <li class="project-title">
                 <h2>프로젝트 명 <span class="star">*</span></h2>
@@ -369,7 +368,7 @@
                   >직접 입력:</label
                 >
                 <input
-                  type="text"
+                  type="number"
                   name="collect-case"
                   id="collect-case-set"
                   v-model="collectCrawlingCount"
@@ -699,15 +698,15 @@
           </article>
         </section>
         <div class="button-align1" @click.stop="submitForm">
+          <button class="btn-set btn2-1">생성</button>
           <router-link
             :to="{
               name: 'allprojectlist',
               params: { projectName: this.projectName },
             }"
-            class="btn-set btn2-1"
-            >생성
-          </router-link>
-          <a href="all-project.html" class="btn-set btn1-1">취소</a>
+            class="btn-set btn1-1"
+            >취소</router-link
+          >
         </div>
       </main>
       <!--    클래스 세부 설정-->
@@ -826,6 +825,7 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import _ from 'lodash';
 import axios from 'axios';
+import router from '@/router';
 
 export default {
   components: { Datepicker },
@@ -1039,26 +1039,14 @@ export default {
       this.attrValue = '';
     },
     async submitForm(e) {
-      if (!this.projectName) {
-        this.errors.push('Name required.');
-        console.log(this.errors);
-      }
-
-      if (!this.projectName) {
-        return 'This field is required';
-      }
-      // if the field is not a valid email
-      const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-      if (!regex.test(this.projectName)) {
-        this.errors.push('email 형식으로 입력해주세요');
+      this.formValidation();
+      e.preventDefault();
+      if (this.errors.length > 0) {
+        alert('해당 항목을 입력해주세요');
         console.log(this.errors);
         return;
       }
-
-      this.formValidation();
-      e.preventDefault();
       // //TODO: requestBody 데이터 추가
-      const ProjectDetailCollect = {};
       const ProjectDetailProcessing = {
         project_categories: this.project_categories,
       };
@@ -1080,6 +1068,7 @@ export default {
       }
 
       alert('프로젝트가 생성되었습니다.');
+      await this.$router.push('allprojectlist');
     },
 
     initForm() {
@@ -1235,12 +1224,15 @@ export default {
     },
     formValidation() {
       this.errors = [];
-      if (this.projectName.length > 50) {
-        this.errors.push('프로젝트명이 너무 길어요');
+      if (this.projectName.length > 50 || this.projectName.length === 0) {
+        this.errors.push('프로젝트 명을 다시 입력해주세요');
         return;
       }
-      if (this.projectExplain.length > 100) {
-        this.errors.push('프로젝트명이 너무 길어요');
+      if (
+        this.projectExplain.length > 100 ||
+        this.projectExplain.length === 0
+      ) {
+        this.errors.push('프로젝트 설명을 다시 입력해주세요');
         return;
       }
       if (!this.projectType) {
