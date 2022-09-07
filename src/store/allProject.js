@@ -40,7 +40,9 @@ function _getProjectList(payload) {
   const { projectName, date } = payload;
   return new Promise((resolve, reject) => {
     axios
-      .get(`http://localhost:3000/project?q=${projectName}`)
+      .get(
+        `http://210.113.122.196:8826/rest/api/1/project/search?project_created_start=1061790170`,
+      )
       .then(r => {
         if (r.data.Error) {
           reject(r.data.Error);

@@ -2,10 +2,11 @@
   <form @submit="submitForm">
     <p v-if="errors.length">
       <b>Please correct the following error(s):</b>
-      <ul>
-        <li v-for="error in errors" :key="error">{{ error }}</li>
-      </ul>
     </p>
+
+    <ul>
+      <li v-for="error in errors" :key="error">{{ error }}</li>
+    </ul>
     <div id="main-wrap">
       <main id="main">
         <section>
@@ -16,13 +17,13 @@
               </li>
               <li class="project-contents">
                 <div class="input-wrap">
-                    <input
-                      type="text"
-                      placeholder="프로젝트 이름을 입력해주세요."
-                      required
-                      v-model="projectName"
-                      id="top"
-                    />
+                  <input
+                    type="text"
+                    placeholder="프로젝트 이름을 입력해주세요."
+                    required
+                    v-model="projectName"
+                    id="top"
+                  />
                   <div class="warning" v-show="isprojectNameValid">
                     <img
                       src="../../../../assets/images/project/icon/icon-warning.svg"
@@ -84,7 +85,7 @@
           <article class="common1">
             <h3>데이터 유형 <span class="star">*</span></h3>
             <ul class="align1">
-<!--              TODO: button -> div 변경에 따른 스타일 변경-->
+              <!--              TODO: button -> div 변경에 따른 스타일 변경-->
               <li style="display: flex">
                 <div
                   @click="collectOwnOnOff"
@@ -392,12 +393,6 @@
             <ul class="project-class-setting">
               <li class="class-setting-title">
                 <h3>클래스</h3>
-                <button @click="isPopUpOnOff()">
-                  <img
-                    src="../../../../assets/images/project/icon/icon-setting.svg"
-                    alt=""
-                  />
-                </button>
               </li>
               <li class="align2 class-setting-contents-input">
                 <input
@@ -417,27 +412,42 @@
                 v-for="(item, index) in categoryItems"
                 :key="index"
               >
+                <span style="margin-right: 5px">
+                  <input type="color" v-model="item.categoryColor" />
+                </span>
                 <button
                   class="close"
                   @click="classNameDelete(index)"
                   v-show="!this.isClassSelectOn[index]"
+                  type="button"
+                  style="cursor: pointer"
                 >
                   <img
                     src="../../../../assets/images/project/icon/icon-close01.svg"
                     alt=""
-                  /></button
-                ><button
+                  />
+                </button>
+                <button
                   class="close"
                   @click="classNameDelete(index)"
                   v-show="this.isClassSelectOn[index]"
+                  type="button"
+                  style="cursor: pointer"
                 >
                   <img
                     src="../../../../assets/images/project/icon/icon-close02.svg"
                     alt=""
-                  /></button
-                ><b @click="isClassSelectOnOff(index)">
+                  />
+                </button>
+                <b @click="isClassSelectOnOff(index)">
                   {{ item.categoryName }}</b
-                ><button class="class-more" v-show="isClassSelectOn[index]">
+                >
+                <button
+                  type="button"
+                  class="class-more"
+                  v-show="isClassSelectOn[index]"
+                  style="cursor: pointer"
+                >
                   <img
                     src="../../../../assets/images/project/icon/icon-arrow01.svg"
                     alt=""
@@ -456,10 +466,15 @@
                 </li>
                 <li
                   class="align1 class-setting-contents"
-                  v-for="item in categoryItems[index].categoryAttrItems"
+                  v-for="(item, itemIndex) in categoryItems[index]
+                    .categoryAttrItems"
                   :key="item"
                 >
-                  <b>{{ item.categoryAttrName }}</b>
+                  <b
+                    :class="{ selectedAttr: isAttrSelectOn[itemIndex] }"
+                    @click.stop="isAttrSelectOnOff(index, itemIndex)"
+                    >{{ item.categoryAttrName }}
+                  </b>
                 </li>
               </ul>
             </div>
@@ -473,7 +488,7 @@
                 <!--                <h3>공통속성</h3>-->
                 <!--              </div>-->
                 <div class="align2 class-setting-title2-select">
-                  <h3>클래스 별 속성 추가</h3>
+                  <h3>클래스 별 속성 수정/추가</h3>
                 </div>
               </div>
               <ul class="class-setting-contents2">
@@ -526,7 +541,11 @@
                         ) in categoryAttrItem.categoryAttrVal"
                         :key="attribute"
                         >{{ attribute }}
-                        <button @click="deleteAttrValue(index)">
+                        <button
+                          type="button"
+                          @click="deleteAttrValue(index)"
+                          style="cursor: pointer"
+                        >
                           <img
                             src="../../../../assets/images/project/icon/icon-close01.svg"
                             alt=""
@@ -592,12 +611,28 @@
                 </li>
 
                 <li class="attribute-wrap align4 attribute-add">
-                  <b>추가하기</b>
-                  <img
-                    @click="addAttribute(index)"
-                    src="../../../../assets/images/project/icon/icon-add2.svg"
-                    alt=""
-                  />
+                  <div v-show="!isAttrSelected" style="margin: auto">
+                    <b>추가하기</b>
+                    <button
+                      type="button"
+                      :disabled="isFullFilled"
+                      @click="addAttribute(index)"
+                    >
+                      <img
+                        style="cursor: pointer"
+                        src="../../../../assets/images/project/icon/icon-add2.svg"
+                        alt=""
+                      />
+                    </button>
+                  </div>
+                  <div v-show="isAttrSelected" style="margin: auto">
+                    <b>수정</b>
+                    <img
+                      @click="updateAttribute(index, selectedAttrIndex)"
+                      src="../../../../assets/images/project/icon/icon-add2.svg"
+                      alt=""
+                    />
+                  </div>
                 </li>
               </ul>
             </div>
@@ -628,7 +663,14 @@
             </ul>
           </article>
         </section>
-        <button type="submit" @click.stop="submitForm" class="btn-set btn2-1">submit</button>
+        <button
+          style="cursor: pointer"
+          type="submit"
+          @click.stop="submitForm"
+          class="btn-set btn2-1"
+        >
+          submit
+        </button>
         <div class="button-align1" @click.stop="submitForm">
           <router-link
             :to="{
@@ -636,8 +678,8 @@
               params: { projectName: this.projectName },
             }"
             class="btn-set btn2-1"
-            >생성하기</router-link
-          >
+            >생성하기
+          </router-link>
           <div class="btn-set btn2-1" @click.stop="submitForm">생성</div>
           <a href="all-project.html" class="btn-set btn1-1">취소</a>
         </div>
@@ -647,7 +689,11 @@
         <ul class="project-popup1">
           <li class="project-popup-title align2">
             <h2>클래스 세부 설정</h2>
-            <button @click="isPopUpOn = false">
+            <button
+              type="button"
+              style="cursor: pointer"
+              @click="isPopUpOn = false"
+            >
               <img
                 src="../../../../assets/images/project/icon/icon-close03.svg"
                 alt=""
@@ -676,7 +722,7 @@
                   <td><span>person1</span></td>
                   <td><span>person1</span></td>
                   <td>
-                    <button>
+                    <button type="button" style="cursor: pointer">
                       <img
                         src="../../../../assets/images/project/icon/icon-delete.svg"
                         alt=""
@@ -693,7 +739,7 @@
                   <td><span>person1</span></td>
                   <td><span>person1</span></td>
                   <td>
-                    <button>
+                    <button type="button" style="cursor: pointer">
                       <img
                         src="../../../../assets/images/project/icon/icon-delete.svg"
                         alt=""
@@ -710,7 +756,7 @@
                   <td><span>person1</span></td>
                   <td><span>person1</span></td>
                   <td>
-                    <button>
+                    <button type="button" style="cursor: pointer">
                       <img
                         src="../../../../assets/images/project/icon/icon-delete.svg"
                         alt=""
@@ -721,7 +767,9 @@
               </table>
             </div>
             <div class="align6">
-              <button class="btn2-1">저장</button>
+              <button type="button" style="cursor: pointer" class="btn2-1">
+                저장
+              </button>
             </div>
           </li>
         </ul>
@@ -735,13 +783,15 @@
             </h2>
           </li>
           <li class="alert-bottom align6">
-            <button class="btn2-1">확인</button>
+            <button type="button" style="cursor: pointer" class="btn2-1">
+              확인
+            </button>
           </li>
         </ul>
       </div>
     </div>
   </form>
-<!--  <button @click="scroll" >scroll</button>-->
+  <!--  <button @click="scroll" >scroll</button>-->
 </template>
 
 <script>
@@ -750,7 +800,6 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import _ from 'lodash';
 import axios from 'axios';
-
 
 export default {
   components: { Datepicker },
@@ -832,7 +881,7 @@ export default {
       categoryItem: {
         categoryName: '',
         categoryParentId: Number,
-        categoryColor: Number,
+        categoryColor: '',
         categoryAttrItems: [],
       },
       categoryAttrItem: {
@@ -856,6 +905,8 @@ export default {
         categoryAttrLengthMax: 0,
       },
       isClassSelectOn: [],
+      isAttrSelectOn: [],
+      selectedAttrIndex: -1,
       attributes: [],
       attrValue: '',
       projectWorkStep: '수집',
@@ -875,21 +926,26 @@ export default {
         this.collectCrawlingKeyword.length > 10
       );
     },
-    selectedDataSet(){
-      return (this.collectOwnListItem.filter((item)=>{
+    selectedDataSet() {
+      return this.collectOwnListItem.filter(item => {
         return item.selected === true;
-      }));
+      });
+    },
+    isAttrSelected() {
+      return (
+        this.isAttrSelectOn.filter(item => {
+          return item === true;
+        }).length === 1
+      );
+    },
+    isFullFilled() {
+      return !(
+        this.categoryAttrItem.categoryAttrType !== '' &&
+        this.categoryAttrItem.categoryAttrVal.length !== 0
+      );
     },
   },
   methods: {
-    scroll() {
-      this.intervalId = setInterval(() => {
-        if (window.pageYOffset === 0) {
-          clearInterval(this.intervalId)
-        }
-        window.scroll(0, window.pageYOffset - 50)
-      }, 20)
-    },
     projectWorkStepSelect: function () {
       if (this.projectType === 'collect') {
         this.projectWorkStep = '수집';
@@ -924,22 +980,39 @@ export default {
       for (let index = 0; index < this.isClassSelectOn.length; index++) {
         this.isClassSelectOn[index] = false;
       }
-      this.isClassSelectOn[index] = true;
+      this.isClassSelectOn[index] = !this.isClassSelectOn[index];
       this.initClass(index);
-      console.log(this.isClassSelectOn);
+    },
+    isAttrSelectOnOff(index, itemIndex) {
+      this.categoryAttrItem = _.cloneDeep(
+        this.categoryItems[index].categoryAttrItems[itemIndex],
+      );
+      for (let i = 0; i < this.isAttrSelectOn.length; i++) {
+        if (i === itemIndex) continue;
+        this.isAttrSelectOn[i] = false;
+      }
+      this.isAttrSelectOn[itemIndex] = !this.isAttrSelectOn[itemIndex];
+      console.log(this.isAttrSelectOn);
+      this.selectedAttrIndex = itemIndex;
+      if (!this.isAttrSelectOn[itemIndex]) {
+        this.initClass(index);
+      }
     },
     initClass(index) {
+      this.isAttrSelectOn = new Array(
+        this.categoryItems[index].categoryAttrItems.length,
+      );
+      this.isAttrSelectOn.fill(false);
       this.categoryAttrItem = this.categoryAttrsTemp[index];
       this.attrValue = '';
     },
-     submitForm(e) {
-
-       if (!this.projectName) {
-        this.errors.push("Name required.");
-        console.log(this.errors)
+    submitForm(e) {
+      if (!this.projectName) {
+        this.errors.push('Name required.');
+        console.log(this.errors);
       }
 
-       if (this.collectCrawlingPeriod === 'custom') {
+      if (this.collectCrawlingPeriod === 'custom') {
         this.collectCrawlingPeriod = this.collectCrawlingPeriodInput;
       }
       if (this.collectCrawlingCount === 'countcustom') {
@@ -968,15 +1041,15 @@ export default {
       if (!this.projectName) {
         return 'This field is required';
       }
-       // if the field is not a valid email
+      // if the field is not a valid email
       const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
       if (!regex.test(this.projectName)) {
         this.errors.push('email 형식으로 입력해주세요');
         console.log(this.errors);
-        return
+        return;
       }
 
-      this.formValidation()
+      this.formValidation();
       e.preventDefault();
       // //TODO: requestBody 데이터 추가
       // await axios.post('/rest/api/1/project/create', {
@@ -1009,17 +1082,32 @@ export default {
       this.workStep1 = '';
       this.workStep2 = '';
     },
-    clickFunc() {
-      console.log(this.checkedCollectOwn);
-    },
     unselectAll: function () {
       for (let i = 0; i < this.isClassSelectOn.length; i++) {
         this.isClassSelectOn[i] = false;
       }
+      for (let attr = 0; attr < this.isAttrSelectOn.length; attr++) {
+        this.isAttrSelectOn[attr] = false;
+      }
     },
     addCate: function () {
+      if (!this.categoryItem.categoryName) {
+        alert('값을 입력해주세요');
+        return;
+      }
+      for (const item of this.categoryItems) {
+        if (item.categoryName === this.categoryItem.categoryName) {
+          alert('이미 존재하는 값입니다');
+          return;
+        }
+      }
       this.unselectAll();
       let categoryItem = _.cloneDeep(this.categoryItem);
+      while (categoryItem.categoryColor.length !== 7) {
+        categoryItem.categoryColor = `#${Math.round(
+          Math.random() * 0xffffff,
+        ).toString(16)}`;
+      }
       this.categoryItems.push(categoryItem);
       this.categoryAttrsTemp.push(_.cloneDeep(this.categoryAttrItemOrigin));
       this.categoryItem.categoryName = '';
@@ -1032,7 +1120,7 @@ export default {
     },
     addAttributeValue(index) {
       if (this.categoryAttrItem.categoryAttrVal.includes(this.attrValue)) {
-        alert("속성값이 이미 존재합니다");
+        alert('속성값이 이미 존재합니다');
         return;
       }
       this.categoryAttrItem.categoryAttrVal.push(this.attrValue);
@@ -1046,9 +1134,13 @@ export default {
     addAttribute(index) {
       for (const item of this.categoryItems[index].categoryAttrItems) {
         if (item.categoryAttrName === this.categoryAttrItem.categoryAttrName) {
-          alert("속성명이 이미 존재합니다");
+          alert('속성명이 이미 존재합니다.');
           return;
         }
+      }
+      if (this.categoryAttrItem.categoryAttrName === '') {
+        alert('속성명을 적어주세요.');
+        return;
       }
       this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
       this.categoryItems[index].categoryAttrItems.push(
@@ -1058,17 +1150,36 @@ export default {
       this.categoryAttrItem = _.cloneDeep(this.categoryAttrItemOrigin);
       this.attrValue = '';
     },
+    updateAttribute(index, attrIndex) {
+      for (const item of this.categoryItems[index].categoryAttrItems) {
+        if (item.categoryAttrName === this.categoryAttrItem.categoryAttrName) {
+          alert('속성명이 이미 존재합니다.');
+          return;
+        }
+      }
+      if (this.categoryAttrItem.categoryAttrName === '') {
+        alert('속성명을 적어주세요.');
+        return;
+      }
+      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItem);
+      this.categoryItems[index].categoryAttrItems[attrIndex] =
+        this.categoryAttrsTemp[index];
+      this.categoryAttrsTemp[index] = _.cloneDeep(this.categoryAttrItemOrigin);
+      this.categoryAttrItem = _.cloneDeep(this.categoryAttrItemOrigin);
+      this.attrValue = '';
+      this.isAttrSelectOnOff(index, attrIndex);
+    },
     isCollectedOwn: function () {
       return this.dataType === 0;
     },
     isCrawlingData: function () {
       return this.dataType === 1;
     },
-    formValidation(){
+    formValidation() {
       this.errors = [];
       if (this.projectName.length > 50) {
         this.errors.push('프로젝트명이 너무 길어요');
-        return
+        return;
       }
       if (this.projectExplain.length > 100) {
         this.errors.push('프로젝트명이 너무 길어요');
@@ -1084,8 +1195,7 @@ export default {
             this.errors.push('자체 제공 데이터셋을 한개 이상 선택해주세요');
             return;
           }
-        }
-        else if(this.isCrawlingData()){
+        } else if (this.isCrawlingData()) {
           if (!this.collectCrawlingChannel) {
             this.errors.push('수집 채널을 선택해주세요');
             return;
@@ -1104,9 +1214,14 @@ export default {
           }
         }
       }
-    }
+    },
   },
 };
 </script>
 
-<style></style>
+<style>
+.selectedAttr {
+  color: blue;
+  font-weight: bold;
+}
+</style>
