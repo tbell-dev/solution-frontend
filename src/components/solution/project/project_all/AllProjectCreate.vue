@@ -698,14 +698,6 @@
             </ul>
           </article>
         </section>
-        <button
-          style="cursor: pointer"
-          type="submit"
-          @click.stop="submitForm"
-          class="btn-set btn2-1"
-        >
-          submit
-        </button>
         <div class="button-align1" @click.stop="submitForm">
           <router-link
             :to="{
@@ -713,9 +705,8 @@
               params: { projectName: this.projectName },
             }"
             class="btn-set btn2-1"
-            >생성하기
+            >생성
           </router-link>
-          <div class="btn-set btn2-1" @click.stop="submitForm">생성</div>
           <a href="all-project.html" class="btn-set btn1-1">취소</a>
         </div>
       </main>
