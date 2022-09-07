@@ -93,84 +93,85 @@ const routes = [
     meta: { auth: false },
     children: [
       {
-        path: '/sslo/main',
+        path: 'main',
         component: () => import('../components/main_sslo/SsloMain.vue'),
         meta: { auth: false },
+        alias: '/',
       },
       {
-        path: '/sslo/setting/mypage',
+        path: 'setting/mypage',
         component: () =>
           import('../components/main_sslo/mypage/SettingMyPage.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/setting/password',
+        path: 'setting/password',
         component: () =>
           import('../components/main_sslo/mypage/SettingPassword.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/service',
+        path: 'service',
         component: () => import('../components/main_sslo/service/Service.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/solution',
+        path: 'solution',
         component: () =>
           import('../components/main_sslo/solution/Solution.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/price',
+        path: 'price',
         component: () => import('../components/main_sslo/price/Price.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/company',
+        path: 'company',
         component: () => import('../components/main_sslo/company/Company.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/notice',
+        path: 'notice',
         component: () => import('../components/main_sslo/support/Notice.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/qna',
+        path: 'qna',
         component: () =>
           import('../components/main_sslo/support/QnaCreate.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/qnalist',
+        path: 'qnalist',
         component: () => import('../components/main_sslo/support/QnaList.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/qnadetail',
+        path: 'qnadetail',
         component: () =>
           import('../components/main_sslo/support/QnaDetail.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/qnaupdate',
+        path: 'qnaupdate',
         component: () =>
           import('../components/main_sslo/support/QnaUpdate.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/partnership',
+        path: 'partnership',
         component: () =>
           import('../components/main_sslo/support/Partnership.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/faq',
+        path: 'faq',
         component: () => import('../components/main_sslo/support/Faq.vue'),
         meta: { auth: false },
       },
       {
-        path: '/sslo/faqdetail',
+        path: 'faqdetail',
         component: () =>
           import('../components/main_sslo/support/FaqDetail.vue'),
         meta: { auth: false },
@@ -202,6 +203,13 @@ const routes = [
   },
   {
     path: '/dashboard/detail/collect',
+    name: '',
+    component: () =>
+      import('../views/solution/dashboard/DashboardDetailCollectPage.vue'),
+    meta: { auth: false },
+  },
+  {
+    path: '/dashboard/detail/collect/:id',
     name: '',
     component: () =>
       import('../views/solution/dashboard/DashboardDetailCollectPage.vue'),
@@ -577,6 +585,17 @@ const routes = [
     name: 'labelingstudio',
     component: () => import('../views/work_studio/StudioLabelingPage.vue'),
     meta: { auth: false },
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('../test/SessionTest'),
+    meta: { auth: false },
+  },
+  {
+    path: '/validtest',
+    name: 'validtest',
+    component: () => import('../test/valid'),
   },
 ];
 

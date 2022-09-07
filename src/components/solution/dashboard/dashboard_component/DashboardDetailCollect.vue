@@ -25,14 +25,32 @@
           <th><span>현재용량</span></th>
         </tr>
         <tr>
-          <td><span>사람 얼굴 수집</span></td>
-          <td><span>500</span></td>
-          <td><span>0</span></td>
-          <td><span>2</span></td>
-          <td><span>2022.01.01 ~ 2022.01.08</span></td>
-          <td><span>100%</span></td>
-          <td><span>2021.10.22</span></td>
-          <td><span>10MB</span></td>
+          <td>
+            <span>{{ projectDetail.projectName }}</span>
+          </td>
+          <td>
+            <span>{{ projectDetail.collectedItem }}</span>
+          </td>
+          <td>
+            <span>{{ projectDetail.remainedItem }}</span>
+          </td>
+          <td>
+            <span>{{ projectDetail.target }}</span>
+          </td>
+          <td>
+            <span
+              >{{ projectDetail.startDate }} ~ {{ projectDetail.endDate }}</span
+            >
+          </td>
+          <td>
+            <span>{{ projectDetail.progress }}</span>
+          </td>
+          <td>
+            <span>{{ projectDetail.registerDate }}</span>
+          </td>
+          <td>
+            <span>{{ projectDetail.size }}</span>
+          </td>
         </tr>
       </table>
     </article>
@@ -56,7 +74,33 @@
 </template>
 
 <script>
-export default {};
+import { ref } from 'vue';
+import axios from 'axios';
+
+export default {
+  props: {
+    projectId: {},
+  },
+  setup(props) {
+    const projectDetail = ref({});
+    const getProjectDetail = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/dashboardDetailCollect/${props.projectId}`,
+        );
+
+        projectDetail.value = res.data;
+      } catch (error) {
+        //TODO: error 메시지
+      }
+    };
+    getProjectDetail();
+    return {
+      getProjectDetail,
+      projectDetail,
+    };
+  },
+};
 </script>
 
 <style></style>

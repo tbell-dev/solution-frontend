@@ -15,8 +15,12 @@
     "core-js": "^3.6.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "lodash": "^4.17.21",
     "mitt": "^3.0.0",
+    "rgba-convert": "^0.3.0",
+    "vee-validate": "^4.5.8",
     "vue": "^3.0.0",
+    "vue-cookies": "^1.8.1",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",
     "xlsx": "^0.18.5"

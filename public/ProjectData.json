@@ -184,5 +184,25 @@
             "projectWorker": "4",
             "date": "2022.03.15"
         }
+    ],
+    "myProjects": [
+        {
+            "id" : 1,
+            "projectName": "예시1",
+            "projectProgress": "10",
+            "projectLink": "my-work-file",
+            "todo" : 100,
+            "done" : 1000,
+            "rejected" : 10000
+        },
+        {
+            "id" : 2,
+            "projectName": "예시2",
+            "projectProgress": "20",
+            "projectLink": "my-work-file",
+            "todo" : 100,
+            "done" : 1000,
+            "rejected" : 10000
+        }
     ]
 }

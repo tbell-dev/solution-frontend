@@ -108,7 +108,7 @@
               </li>
               <li>
                 <button class="login-btn">로그인</button>
-                <button class="login-btn2">로그인</button>
+                <button class="login-btn2" @click="login">로그인</button>
                 <div class="login-option">
                   <a href="#">아이디 찾기</a>
                   <span></span>
@@ -126,7 +126,25 @@
 </template>
 
 <script>
-export default {};
+import { ref } from 'vue';
+import axios from 'axios';
+export default {
+  setup() {
+    const id = ref('admin01');
+    const password = ref('qwer1');
+    const login = async () => {
+      await axios.post('http://210.113.122.196:8825/rest/api/1/auth/login', {
+        user_id: id.value,
+        user_password: password.value,
+      });
+    };
+    return {
+      id,
+      password,
+      login,
+    };
+  },
+};
 </script>
 
 <style scoped>
