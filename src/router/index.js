@@ -460,7 +460,7 @@ const routes = [
   },
   // 설정
   {
-    path: '/allProject/project_cleaning/setting/cleaning',
+    path: '/allProject/project_cleaning/setting/cleaning/:id',
     name: '',
     component: () =>
       import(

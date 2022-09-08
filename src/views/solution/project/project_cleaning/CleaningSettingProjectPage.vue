@@ -23,164 +23,23 @@
             <h3>프로젝트 명</h3>
             <ul class="align1">
               <li>
-                <input type="text" readonly />
+                <input type="text" v-model="projectName" />
               </li>
             </ul>
             <h3>프로젝트 설명</h3>
             <ul class="align1">
               <li>
-                <input type="text" readonly />
+                <input type="text" v-model="projectDesc" />
               </li>
             </ul>
             <h3>프로젝트 유형</h3>
             <ul class="align1">
               <li>
-                <input type="text" readonly />
+                <input type="text" v-model="projectType" readonly />
               </li>
             </ul>
             <h3>프로젝트 설정</h3>
-            <ul class="align1">
-              <li>
-                <button
-                  :class="{
-                    'btn1-active btn1-3': isCleaningShowOn == true,
-                    'btn1-3': isCleaningShowOn == false,
-                  }"
-                  @click="isCleaningShowOnOff()"
-                >
-                  영상/이미지 정제
-                </button>
-                <button
-                  :class="{
-                    'btn1-active btn1-3': isPreprocessingShowOn == true,
-                    'btn1-3': isPreprocessingShowOn == false,
-                  }"
-                  @click="isPreprocessingShowOnOff()"
-                >
-                  이미지 전처리
-                </button>
-              </li>
-            </ul>
-          </article>
-          <article class="purification-data-type" v-show="isCleaningShowOn">
-            <ul class="align1">
-              <li class="radio-wrap">
-                <input
-                  type="radio"
-                  checked
-                  name="purification-type"
-                  id="purification-type1"
-                />
-                <label for="purification-type1"
-                  >영상 프레임 단위 이미지 추출</label
-                >
-              </li>
-              <li class="radio-wrap">
-                <input
-                  type="radio"
-                  name="purification-type"
-                  id="purification-type2"
-                />
-                <label for="purification-type2">중복 이미지 데이터 제거</label>
-              </li>
-            </ul>
-          </article>
-          <article class="image-preprocessing" v-show="isPreprocessingShowOn">
-            <ul class="align1">
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type1"
-                  checked
-                />
-                <label for="image-preprocessing-type1">그레이스케일</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type2"
-                />
-                <label for="image-preprocessing-type2">이진화</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type3"
-                />
-                <label for="image-preprocessing-type3">확대/축소</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type4"
-                />
-                <label for="image-preprocessing-type4">회전/변환</label>
-              </li>
-            </ul>
-            <ul class="align1">
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type5"
-                />
-                <label for="image-preprocessing-type5">밝기/대비</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type6"
-                />
-                <label for="image-preprocessing-type6">선명도</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type7"
-                />
-                <label for="image-preprocessing-type7">자르기</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type8"
-                />
-                <label for="image-preprocessing-type8">블러처리</label>
-              </li>
-            </ul>
-            <ul class="align1">
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type9"
-                />
-                <label for="image-preprocessing-type9">노이즈 제거</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type10"
-                />
-                <label for="image-preprocessing-type10">배경제거</label>
-              </li>
-              <li class="checkbox-wrap">
-                <input
-                  type="checkbox"
-                  name="image-preprocessing-type"
-                  id="image-preprocessing-type11"
-                />
-                <label for="image-preprocessing-type11">비식별화</label>
-              </li>
-            </ul>
+            <ul class="align1"></ul>
           </article>
         </section>
       </main>
@@ -194,6 +53,8 @@ import MainMenu from '../../../../components/solution/common/MenuMain.vue';
 import SubMenu from '../../../../components/solution/common/MenuSub1.vue';
 // 헤더
 import Header from '../../../../components/solution/common/Header.vue';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -201,18 +62,27 @@ export default {
     SubMenu,
     Header,
   },
-  data: function () {
-    return { isCleaningShowOn: true, isPreprocessingShowOn: false };
-  },
-  methods: {
-    isCleaningShowOnOff() {
-      this.isCleaningShowOn = true;
-      this.isPreprocessingShowOn = false;
-    },
-    isPreprocessingShowOnOff() {
-      this.isCleaningShowOn = false;
-      this.isPreprocessingShowOn = true;
-    },
+  data: function () {},
+  methods: {},
+  setup() {
+    const projectName = ref('');
+    const projectDesc = ref('');
+    const projectType = ref('');
+    onMounted(async () => {
+      const res = await axios.get(
+        'http://210.113.122.196:8825/rest/api/1/project?project_id=15',
+      );
+      console.log(res.data);
+      projectName.value = res.data.project_name;
+      projectDesc.value = res.data.project_desc;
+      projectType.value = res.data.project_type.project_type_name;
+      console.log(projectName.value);
+    });
+    return {
+      projectName,
+      projectDesc,
+      projectType,
+    };
   },
 };
 </script>
