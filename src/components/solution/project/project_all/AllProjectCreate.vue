@@ -169,7 +169,7 @@
                     type="radio"
                     name="collect-chanel"
                     id="collect-chanel-naver"
-                    v-model="collectCrawlingChannel"
+                    v-model="crawling_channel_type"
                     value="naver"
                   />
                   <label for="collect-chanel-naver"
@@ -189,7 +189,7 @@
                     type="radio"
                     name="collect-chanel"
                     id="collect-chanel-daum"
-                    v-model="collectCrawlingChannel"
+                    v-model="crawling_channel_type"
                     value="daum"
                   />
                   <label for="collect-chanel-daum"
@@ -209,7 +209,7 @@
                     type="radio"
                     name="collect-chanel"
                     id="collect-chanel-google"
-                    v-model="collectCrawlingChannel"
+                    v-model="crawling_channel_type"
                     value="google"
                   />
                   <label for="collect-chanel-google"
@@ -231,7 +231,7 @@
                   <input
                     type="text"
                     placeholder="키워드를 입력하세요."
-                    v-model="collectCrawlingKeyword"
+                    v-model="crawling_keywords"
                   />
                   <div class="warning" v-show="isCollectCrawlingKeywordValid">
                     <img
@@ -250,8 +250,8 @@
                     type="radio"
                     name="collect-date"
                     id="collect-date-week"
-                    v-model="collectCrawlingPeriod"
-                    value="1"
+                    v-model="crawling_period_type"
+                    value="2"
                   />
                   <label for="collect-date-week">1주일</label>
                 </div>
@@ -262,8 +262,8 @@
                     type="radio"
                     name="collect-date"
                     id="collect-date-month"
-                    v-model="collectCrawlingPeriod"
-                    value="2"
+                    v-model="crawling_period_type"
+                    value="3"
                   />
                   <label for="collect-date-month">3개월</label>
                 </div>
@@ -274,8 +274,8 @@
                     type="radio"
                     name="collect-date"
                     id="collect-date-year"
-                    v-model="collectCrawlingPeriod"
-                    value="3"
+                    v-model="crawling_period_type"
+                    value="4"
                   />
                   <label for="collect-date-year">1년</label>
                 </div>
@@ -286,17 +286,18 @@
                     type="radio"
                     name="collect-date"
                     id="collect-date-set"
-                    v-model="collectCrawlingPeriod"
-                    value="0"
+                    v-model="crawling_period_type"
+                    value="1"
                   />
                   <label for="collect-date-set">직접입력</label>
                   <Datepicker
                     class="datepicker"
-                    v-model="collectCrawlingPeriodInput"
-                    v-show="collectCrawlingPeriod === '0'"
+                    v-model="crawling_period_input"
+                    v-show="crawling_period_type === '1'"
                     range
-                    multiCalendars
-                    :enableTimePicker="false"
+                    multi-calendars
+                    :enable-time-picker="false"
+                    auto-apply
                   />
                 </div>
               </li>
@@ -309,7 +310,7 @@
                     type="radio"
                     name="collect-case"
                     id="collect-case-100"
-                    v-model="collectCrawlingCount"
+                    v-model="crawling_limit"
                     value="100"
                   />
                   <label for="collect-case-100">100</label>
@@ -321,7 +322,7 @@
                     type="radio"
                     name="collect-case"
                     id="collect-case-500"
-                    v-model="collectCrawlingCount"
+                    v-model="crawling_limit"
                     value="500"
                   />
                   <label for="collect-case-500">500</label>
@@ -333,7 +334,7 @@
                     type="radio"
                     name="collect-case"
                     id="collect-case-1000"
-                    v-model="collectCrawlingCount"
+                    v-model="crawling_limit"
                     value="1000"
                   />
                   <label for="collect-case-1000">1000</label>
@@ -345,7 +346,7 @@
                     type="radio"
                     name="collect-case"
                     id="collect-case-2000"
-                    v-model="collectCrawlingCount"
+                    v-model="crawling_limit"
                     value="2000"
                   />
                   <label for="collect-case-2000">2000</label>
@@ -357,7 +358,7 @@
                     type="radio"
                     name="collect-case"
                     id="collect-case-3000"
-                    v-model="collectCrawlingCount"
+                    v-model="crawling_limit"
                     value="3000"
                   />
                   <label for="collect-case-3000">3000</label>
@@ -371,7 +372,7 @@
                   type="number"
                   name="collect-case"
                   id="collect-case-set"
-                  v-model="collectCrawlingCount"
+                  v-model="crawling_limit"
                 />
               </li>
             </ul>
@@ -832,7 +833,7 @@ export default {
   mounted() {
     const startDate = new Date();
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
-    this.collectCrawlingPeriodInput = [startDate, endDate];
+    this.crawling_period_input = [startDate, endDate];
   },
   data() {
     return {
@@ -844,7 +845,12 @@ export default {
       //1-1.데이터 수집
       isCollectOwnOn: true, //자제 제공 데이터셋
       isCollectCrawlingOn: false, //크롤링 수집 데이터
-      dataType: -1,
+      data_type: -1,
+      crawling_channel_type: '', //수집채널
+      crawling_keywords: '', //키워드
+      crawling_period_type: '', //수집 기간
+      crawling_period_input: '', //수집 기간-직접입력값
+      crawling_limit: '', //수집 건수
       //1-1-1.자체 제공 데이터셋
       checkedCollectOwn: [], //목록 선택 체크박스
       collectOwnListItem: [
@@ -876,14 +882,6 @@ export default {
       ],
       isAllChecked: false,
       //1-1-2.크롤링 수집 데이터
-      collectCrawlingChannel: '', //수집채널
-      collectCrawlingKeyword: '', //키워드
-      collectCrawlingPeriod: '', //수집 기간
-      collectCrawlingPeriodInput: '', //수집 기간-직접입력값
-      collectCrawlingCount: '', //수집 건수
-      collectCrawlingCountInput: '', //수집 건수-직접입력값
-      // checkedValues: [],
-      // isAllChecked: true,
 
       //1-2.데이터 정제/전처리
       isCleaningOn: true, //데이터 정제
@@ -900,7 +898,6 @@ export default {
       isPopUpOn: false, //클래스 세부 설정 팝업
       propertyType: '1',
       classSettingMultipleChoice: false,
-      3: false,
 
       project_categories: [],
       categoryAttrsTemp: [],
@@ -944,8 +941,7 @@ export default {
     },
     isCollectCrawlingKeywordValid() {
       return (
-        this.collectCrawlingKeyword.length < 1 ||
-        this.collectCrawlingKeyword.length > 10
+        this.crawling_keywords.length < 1 || this.crawling_keywords.length > 10
       );
     },
     selectedDataSet() {
@@ -967,6 +963,23 @@ export default {
           0
       );
     },
+    crawling_period_start() {
+      return new Date(this.crawling_period_input[0]).getTime();
+    },
+    crawling_period_end() {
+      return new Date(this.crawling_period_input[1]).getTime();
+    },
+    project_type_id() {
+      switch (this.projectType) {
+        case 'collect':
+          return 1;
+        case 'cleaning':
+          return 2;
+        case 'labeling':
+          return 4;
+      }
+      return 1;
+    },
   },
   methods: {
     projectWorkStepSelect: function () {
@@ -982,12 +995,12 @@ export default {
     collectOwnOnOff: function () {
       this.isCollectOwnOn = true;
       this.isCollectCrawlingOn = false;
-      this.dataType = 0;
+      this.data_type = 0;
     },
     collectCrawlingOnOff: function () {
       this.isCollectOwnOn = false;
       this.isCollectCrawlingOn = true;
-      this.dataType = 1;
+      this.data_type = 1;
     },
     //데이터 정제/전처리 프로젝트 설정 - 데이터 유형
 
@@ -1046,10 +1059,24 @@ export default {
         console.log(this.errors);
         return;
       }
+      let ProjectDetail = {};
       // //TODO: requestBody 데이터 추가
-      const ProjectDetailProcessing = {
-        project_categories: this.project_categories,
-      };
+      if (this.project_type_id === 1) {
+        this.ProjectDetail = {
+          data_type: this.data_type,
+          dataset_ids: this.selectedDataSet,
+          crawling_channel_type: this.crawling_channel_type,
+          crawling_keywords: [this.crawling_keywords],
+          crawling_period_type: this.crawling_period_type,
+          crawling_period_start: this.crawling_period_start,
+          crawling_period_end: this.crawling_period_end,
+          crawling_limit: this.crawling_limit,
+        };
+      } else if (this.project_type_id === 4) {
+        this.ProjectDetail = {
+          project_categories: this.project_categories,
+        };
+      }
       try {
         await axios.post(
           'http://210.113.122.196:8825/rest/api/1/project/create',
@@ -1057,10 +1084,10 @@ export default {
             project_name: this.projectName,
             project_desc: this.projectExplain,
             project_type: {
-              project_type_id: 4,
+              project_type_id: this.project_type_id,
               project_type_name: this.projectType,
             },
-            project_detail: ProjectDetailProcessing,
+            project_detail: this.ProjectDetail,
           },
         );
       } catch (err) {
@@ -1217,10 +1244,10 @@ export default {
       this.isAttrSelectOnOff(index, attrIndex);
     },
     isCollectedOwn: function () {
-      return this.dataType === 0;
+      return this.data_type === 0;
     },
     isCrawlingData: function () {
-      return this.dataType === 1;
+      return this.data_type === 1;
     },
     formValidation() {
       this.errors = [];
@@ -1246,19 +1273,19 @@ export default {
             return;
           }
         } else if (this.isCrawlingData()) {
-          if (!this.collectCrawlingChannel) {
+          if (!this.crawling_channel_type) {
             this.errors.push('수집 채널을 선택해주세요');
             return;
           }
-          if (!this.collectCrawlingKeyword) {
+          if (!this.crawling_keywords) {
             this.errors.push('키워드를 입력해주세요');
             return;
           }
-          if (!this.collectCrawlingPeriod) {
+          if (!this.crawling_period_type) {
             this.errors.push('수집 기간을 선택해주세요');
             return;
           }
-          if (!this.collectCrawlingCount) {
+          if (!this.crawling_limit) {
             this.errors.push('수집 건수를 선택해주세요');
             return;
           }
