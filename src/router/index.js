@@ -586,17 +586,6 @@ const routes = [
     component: () => import('../views/work_studio/StudioLabelingPage.vue'),
     meta: { auth: false },
   },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('../test/SessionTest'),
-    meta: { auth: false },
-  },
-  {
-    path: '/validtest',
-    name: 'validtest',
-    component: () => import('../test/valid'),
-  },
 ];
 
 const router = createRouter({
