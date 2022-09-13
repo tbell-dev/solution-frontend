@@ -35,22 +35,41 @@
             <h3>프로젝트 유형</h3>
             <ul class="align1">
               <li>
-                <input type="text" v-model="projectType.project_type_name" readonly />
+                <input
+                  type="text"
+                  v-model="projectType.project_type_name"
+                  readonly
+                />
               </li>
             </ul>
           </article>
         </section>
         <section>
           <article class="common1">
-            <h3>프로젝트 상세 정보</h3>
-            <ul class="align1" v-show="projectType.project_type_name === '수집'">
+            <h3 style="font-size: 20px">프로젝트 상세 정보</h3>
+            <ul
+              class="align1"
+              v-show="projectType.project_type_name === '수집'"
+            >
               <li v-if="projectDetail.data_type === 1">
-                <div>데이터 유형: 자체제공 데이터셋</div>
-                선택된 데이터셋 번호: {{ projectDetail.dataset_ids }}
+                <div style="display: inline-block">
+                  *데이터 유형:
+                </div>
+                <button class="btn1-active btn1-3 btn1-3">
+                  자체 제공 데이터 셋
+                </button>
+                <div>
+                  *선택된 데이터셋 번호: {{ projectDetail.dataset_ids }}
+                </div>
               </li>
               <li v-if="projectDetail.data_type === 2">
-                <div>데이터 유형: 크롤링 수집 데이터</div>
-                <div>수집채널: {{ projectDetail.crawling_channel_type }}</div>
+                <div>
+                  *데이터 유형:
+                  <button class="btn1-active btn1-3 btn1-3">
+                    크롤링 수집 데이터
+                  </button>
+                </div>
+                <div>*수집채널: {{ projectDetail.crawling_channel_type }}</div>
                 <div class="img-wrap">
                   <img
                     v-if="projectDetail.crawling_channel_type === 'naver'"
@@ -68,32 +87,54 @@
                     alt=""
                   />
                 </div>
-                <div>수집 키워드: {{ projectDetail.crawling_keywords[0] }}</div>
+                <div class="input-wrap">
+                  *수집 키워드:
+                  <div style="display: inline-block; background-color: #CCDFF8;">
+                    {{ projectDetail.crawling_keywords[0] }}
+                  </div>
+                </div>
                 <div>
-                  수집 기간: {{ crawling_period_start }} ~
+                  *수집 기간: {{ crawling_period_start }} ~
                   {{ crawling_period_end }}
                 </div>
-                <div>수집 건수: {{ projectDetail.crawling_limit }}</div>
+                <div>*수집 건수: {{ projectDetail.crawling_limit }}</div>
               </li>
             </ul>
-            <ul style="font-size: 15px" class="align1" v-show="projectType.project_type_name === '가공'">
+            <ul
+              class="align1"
+              v-show="projectType.project_type_name === '가공'"
+            >
               <li>
-                <h4>클래스 정보</h4>
-                <div v-for="item in projectDetail.project_categories">
+                <h4 style="font-size: 15px">클래스 정보</h4>
+                <div
+                  v-for="item in projectDetail.project_categories"
+                  :key="item"
+                  style="margin-top: 5px"
+                >
                   <div
                     style="
                       width: 15px;
                       height: 15px;
                       background-color: #479d48;
                       display: inline-block;
+                      margin: 0;
                     "
                   ></div>
                   {{ item.annotation_category_name }}
                   <div
-                    style="margin-left: 10px"
+                    style="margin-left: 10px; margin-top: 3px"
                     v-for="attr in item.annotation_category_attributes"
+                    :key="attr"
+                    @click="showAttr"
                   >
+                    <img
+                      src="../../../../assets/images/project/icon/icon-arrow01.svg"
+                      alt=""
+                    />
                     {{ attr.annotation_category_attr_name }}
+                    <div v-if="show" style="margin-left: 30px; margin-top: 5px">
+                      속성값: {{ attr.annotation_category_attr_val.toString() }}
+                    </div>
                   </div>
                 </div>
               </li>
@@ -102,7 +143,13 @@
         </section>
         <div class="button-align1">
           <button class="btn-set btn2-1" @click="updateProject">수정</button>
-          <button class="btn-set btn1-1" style="color: rgba(255,0,0,0.94)" @click="deleteProject">삭제</button>
+          <button
+            class="btn-set btn1-1"
+            style="color: rgba(255, 0, 0, 0.94)"
+            @click="deleteProject"
+          >
+            삭제
+          </button>
         </div>
       </main>
     </div>
@@ -125,8 +172,16 @@ export default {
     SubMenu,
     Header,
   },
-  data: function () {},
-  methods: {},
+  data: function () {
+    return {
+      show: false,
+    };
+  },
+  methods: {
+    showAttr() {
+      this.show = !this.show;
+    },
+  },
   computed: {},
   setup() {
     const router = useRoute();
@@ -206,4 +261,12 @@ export default {
 <style>
 @import '../../../../css/reset.css';
 @import '../../../../css/common.css';
+
+li div {
+  font-size: 18px;
+  margin: 10px;
+  background-color: #ecf3fb;
+  font-family: 'NanumSquare', sans-serif;
+  letter-spacing: -0.3px;
+}
 </style>

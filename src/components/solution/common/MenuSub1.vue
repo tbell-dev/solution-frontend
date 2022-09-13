@@ -19,25 +19,12 @@
       <ul class="sub-menu-bottom">
         <li :class="{ 'now-menu': currentPage == 'folderlist' }">
           <router-link to="/allProject/project_cleaning/folderlist"
-            >데이터셋</router-link
+            >데이터 목록</router-link
           >
         </li>
         <li :class="{ 'now-menu': currentPage == 'memberwork' }">
           <router-link to="/allProject/project_cleaning/memberwork"
             >멤버 작업현황</router-link
-          >
-        </li>
-        <li :class="{ 'now-menu': currentPage == 'guidelist' }">
-          <router-link to="/allProject/project_cleaning/guidelist"
-            >가이드</router-link
-          >
-        </li>
-        <li :class="{ 'now-menu': currentPage == 'qna' }">
-          <router-link to="/allProject/project_cleaning/qna">Q&A</router-link>
-        </li>
-        <li :class="{ 'now-menu': currentPage == 'output' }">
-          <router-link to="/allProject/project_cleaning/output"
-            >산출물 내보내기</router-link
           >
         </li>
         <li :class="{ 'now-menu': currentPage == 'statistics' }">

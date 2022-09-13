@@ -86,7 +86,7 @@
             <ul class="align1">
               <!--              TODO: button -> div 변경에 따른 스타일 변경-->
               <li style="display: flex">
-                <div
+                <button type="button"
                   @click="collectOwnOnOff"
                   :class="{
                     'btn1-active btn1-3': isCollectOwnOn,
@@ -94,8 +94,9 @@
                   }"
                 >
                   자체 제공 데이터셋
-                </div>
-                <div
+                </button>
+                <button
+                  type="button"
                   @click="collectCrawlingOnOff"
                   :class="{
                     'btn1-active btn1-3': isCollectCrawlingOn,
@@ -103,7 +104,7 @@
                   }"
                 >
                   크롤링 수집 데이터
-                </div>
+                </button>
               </li>
             </ul>
           </article>
