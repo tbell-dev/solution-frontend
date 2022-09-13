@@ -46,7 +46,8 @@
           >
         </li>
         <li :class="{ 'now-menu': currentPage == 'setting' }">
-          <router-link to="/allProject/project_cleaning/setting/cleaning"
+          <router-link
+            :to="'/allProject/project_cleaning/setting/cleaning/' + id"
             >설정</router-link
           >
         </li>
@@ -61,6 +62,7 @@ import axios from 'axios';
 export default {
   data: function () {
     return {
+      id: 11,
       currentPage: '',
       projectCheck: '이상행동(주취행동) 이미지 가공',
       AllProjectListItem: [],

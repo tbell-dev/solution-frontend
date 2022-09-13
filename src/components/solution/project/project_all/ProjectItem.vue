@@ -7,7 +7,12 @@
       <span>{{ project.project_type.project_type_name }}</span>
     </td>
     <td>
-      <span>{{ project.project_name }}</span>
+      <router-link
+        :to="
+          '/allProject/project_cleaning/setting/cleaning/' + project.project_id
+        "
+        >{{ project.project_name }}</router-link
+      >
     </td>
     <td>
       <span>{{ project.project_manger }}명</span>
